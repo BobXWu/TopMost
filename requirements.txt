@@ -1,0 +1,5 @@
+torch>=1.17
+gensim>=4.2.0
+scikit-learn
+tqdm
+python-Levenshtein
