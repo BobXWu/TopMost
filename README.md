@@ -12,11 +12,11 @@ This is our survey on neural topic models: [A Survey on Neural Topic Models: Met
     - [Topic Models](#topic-models)
   - [Quick Start](#quick-start)
     - [1. Install](#1-install)
-    - [2. Download a dataset](#2-download-a-dataset)
+    - [2. Download a preprocessed dataset](#2-download-a-preprocessed-dataset)
     - [3. Train a model](#3-train-a-model)
     - [4. Evaluate](#4-evaluate)
-    - [Preprocessing Datasets (Optional)](#preprocessing-datasets-optional)
-    - [Test New Documents (Optional)](#test-new-documents-optional)
+    - [5. Preprocessing new datasets (Optional)](#5-preprocessing-new-datasets-optional)
+    - [6. Test new documents (Optional)](#6-test-new-documents-optional)
   - [Tutorials](#tutorials)
   - [Notice](#notice)
     - [Differences from original implementations](#differences-from-original-implementations)
@@ -136,13 +136,16 @@ pip install topmost
 ```
 
 
-### 2. Download a dataset
+### 2. Download a preprocessed dataset
+
+Download a preprocessed dataset from our github repo:
 
 ```python
 import topmost
+from topmost.data import download_dataset
 
-dataset_dir = "./datasets/NYT"
-topmost.data.download_dataset('NYT', cache_path=dataset_dir)
+dataset_dir = "./datasets/20NG"
+download_dataset('20NG', cache_path='./datasets')
 
 ```
 
@@ -158,7 +161,7 @@ model = topmost.models.ETM(vocab_size=dataset.vocab_size, pretrained_WE=dataset.
 model = model.to(device)
 
 # create a trainer
-trainer = topmost.trainers.BasicTrainer(model, dataset, epochs=2)
+trainer = topmost.trainers.BasicTrainer(model, dataset)
 
 # train the model
 trainer.train()
@@ -186,7 +189,7 @@ results = topmost.evaluations.evaluate_classification(train_theta, test_theta, d
 print(results)
 ```
 
-### Preprocessing Datasets (Optional)
+### 5. Preprocessing new datasets (Optional)
 
 TopMost can preprocess datasets for topic modeling in a standard way.
 Here are the steps:
@@ -205,18 +208,20 @@ Here are the steps:
     Here we download and preprocess 20newsgroup.
 
 ```python
-import topmost
+from topmost.data import download_20ng
 from topmost.preprocessing import Preprocessing
-from topmost.preprocessing import download_20ng
 
-dataset_dir = "./datasets/20NG"
+# download stopwords
+download_dataset('stopwords', cache_path='./datasets')
 
+# download raw data
 download_20ng.download_save(output_dir=dataset_dir)
-preprocessing = Preprocessing(vocab_size=5000)
+
+preprocessing = Preprocessing(vocab_size=5000, stopwords='./datasets/stopwords/snowball_stopwords.txt')
 preprocessing.parse_dataset(dataset_dir=dataset_dir, label_name="group")
 ```
 
-### Test New Documents (Optional)
+### 6. Test new documents (Optional)
 
 ```python
 # test new documents
