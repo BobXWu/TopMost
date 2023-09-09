@@ -6,7 +6,7 @@ with open("./README.md", "r") as file:
 
 
 VERSION = '0.0.1'
-DESCRIPTION = 'Topmost: Neural Topic Modeling System Tookit'
+DESCRIPTION = 'Towards the Topmost: A Topic Modeling System Tookit'
 
 
 # Setting up
@@ -19,16 +19,13 @@ setup(
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         long_description_content_type="text/markdown",
-        url='https://github.com/bobxwu/',
+        url='https://github.com/bobxwu/topmost',
         packages=find_packages(),
         # packages=find_packages(include=['topmost', 'topmost.*']),
         license="Apache 2.0 License",
         install_requires=[], # add any additional packages that needs to be installed along with your package. Eg: 'caer'
         keywords=['toolkit', 'topic model', 'neural topic model'],
         include_package_data=True,
-        package_data={
-            'topmost': ['../datasets/stopwords/*.txt']
-        },
         classifiers= [
             'Development Status :: 3 - Alpha',
             "Intended Audience :: Education",

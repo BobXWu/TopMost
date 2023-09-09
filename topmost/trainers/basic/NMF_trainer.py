@@ -22,8 +22,6 @@ class NMFGensimTrainer:
             passes=self.max_iter
         )
 
-        return self.model.get_topics()
-
     def test(self, bow):
         bow = bow.astype('int64')
         corpus = gensim.matutils.Dense2Corpus(bow, documents_columns=False)
@@ -53,7 +51,6 @@ class NMFSklearnTrainer:
     def train(self):
         train_bow = self.dataset_handler.train_bow.astype('int64')
         self.model.fit(train_bow)
-        return self.model.components_
 
     def test(self, bow):
         bow = bow.astype('int64')

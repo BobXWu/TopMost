@@ -12,7 +12,7 @@ def to_nparray(tensor_list):
 
 
 class HierarchicalTrainer:
-    def __init__(self, model, dataset_handler, epochs=200, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125):
+    def __init__(self, model, dataset_handler, epochs=200, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125, log_interval=5):
         self.model = model
         self.dataset_handler = dataset_handler
         self.epochs = epochs
@@ -20,6 +20,7 @@ class HierarchicalTrainer:
         self.batch_size = batch_size
         self.lr_scheduler = lr_scheduler
         self.lr_step_size = lr_step_size
+        self.log_interval = log_interval
 
     def make_optimizer(self,):
         args_dict = {
@@ -62,32 +63,12 @@ class HierarchicalTrainer:
             if self.lr_scheduler:
                 lr_scheduler.step()
 
-            output_log = f'Epoch: {epoch:03d}'
-            for key in loss_rst_dict:
-                output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
+            if epoch % self.log_interval == 0:
+                output_log = f'Epoch: {epoch:03d}'
+                for key in loss_rst_dict:
+                    output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
 
-            print(output_log)
-
-    # def test(self, bow):
-    #     data_size = bow.shape[0]
-
-    #     num_topics_list = self.model.num_topics_list
-    #     hierarchical_theta_list = np.empty(len(num_topics_list), object)
-    #     for layer_id in range(len(num_topics_list)):
-    #         hierarchical_theta_list[layer_id] = np.zeros((data_size, num_topics_list[layer_id]))
-
-    #     all_idx = torch.split(torch.arange(data_size), self.batch_size)
-
-    #     with torch.no_grad():
-    #         self.model.eval()
-    #         for idx in all_idx:
-    #             batch_input = bow[idx]
-    #             batch_theta_list = self.model.get_theta(batch_input)
-
-    #             for layer_id in range(len(num_topics_list)):
-    #                 hierarchical_theta_list[layer_id][idx] = batch_theta_list[layer_id].cpu().numpy()
-
-    #     return hierarchical_theta_list
+                print(output_log)
 
     def test(self, bow):
         data_size = bow.shape[0]

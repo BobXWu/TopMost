@@ -7,7 +7,7 @@ from topmost.utils import static_utils
 
 
 class DynamicTrainer:
-    def __init__(self, model, dataset_handler, epochs=200, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125):
+    def __init__(self, model, dataset_handler, epochs=200, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125, log_interval=5):
         self.model = model
         self.dataset_handler = dataset_handler
         self.epochs = epochs
@@ -15,6 +15,7 @@ class DynamicTrainer:
         self.batch_size = batch_size
         self.lr_scheduler = lr_scheduler
         self.lr_step_size = lr_step_size
+        self.log_interval = log_interval
 
     def make_optimizer(self,):
         args_dict = {
@@ -57,11 +58,12 @@ class DynamicTrainer:
             if self.lr_scheduler:
                 lr_scheduler.step()
 
-            output_log = f'Epoch: {epoch:03d}'
-            for key in loss_rst_dict:
-                output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
+            if epoch % self.log_interval == 0:
+                output_log = f'Epoch: {epoch:03d}'
+                for key in loss_rst_dict:
+                    output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
 
-            print(output_log)
+                print(output_log)
 
     def test(self, bow, times):
         data_size = bow.shape[0]

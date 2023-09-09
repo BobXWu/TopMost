@@ -24,7 +24,6 @@ class LDAGensimTrainer:
             alpha=self.alpha,
             eta=self.eta
         )
-        return self.model.get_topics()
 
     def test(self, bow):
         bow = bow.astype('int64')
@@ -55,7 +54,6 @@ class LDASklearnTrainer:
     def train(self):
         train_bow = self.dataset.train_bow.astype('int64')
         self.model.fit(train_bow)
-        return self.model.components_
 
     def test(self, bow):
         bow = bow.astype('int64')

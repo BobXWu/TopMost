@@ -21,7 +21,6 @@ class BasicDatasetHandler:
         print("===>test_size: ", self.test_bow.shape[0])
         print("===>vocab_size: ", self.vocab_size)
         print("===>average length: {:.3f}".format(self.train_bow.sum(1).sum() / self.train_bow.shape[0]))
-        print("===>#label: ", len(np.unique(self.train_labels)))
 
         if as_tensor:
             self.train_bow = torch.from_numpy(self.train_bow).to(device)

@@ -11,7 +11,6 @@ import numpy as np
 import scipy.sparse
 from tqdm import tqdm
 from sklearn.feature_extraction.text import CountVectorizer
-import pkgutil
 
 from topmost.data import file_utils
 
@@ -28,15 +27,12 @@ alphanum = re.compile('^[a-zA-Z0-9_]+$')
 
 def get_stopwords(stopwords):
     if isinstance(stopwords, list):
-        pass
-    elif stopwords in ["mallet", "snowball", "custom"]:
-        package_name = __package__.split('.')[0]
-        stopwords_dir = 'stopwords/'
-        stopword_list = pkgutil.get_data(package_name, f'{stopwords_dir}/{stopwords}_stopwords.txt').decode().split()
+        stopword_set = stopwords
+    elif isinstance(stopwords, str):
+        stopword_set = file_utils.read_text(stopwords)
     else:
-        stopword_list = []
+        raise NotImplementedError(stopwords)
 
-    stopword_set = {s.strip() for s in stopword_list}
     return stopword_set
 
 

@@ -7,7 +7,7 @@ from topmost.utils import static_utils
 
 
 class CrosslingualTrainer:
-    def __init__(self, model, dataset_handler, epochs=500, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125):
+    def __init__(self, model, dataset_handler, epochs=500, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125, log_interval=5):
         self.model = model
         self.dataset_handler = dataset_handler
         self.epochs = epochs
@@ -15,6 +15,7 @@ class CrosslingualTrainer:
         self.batch_size = batch_size
         self.lr_scheduler = lr_scheduler
         self.lr_step_size = lr_step_size
+        self.log_interval = log_interval
 
     def make_optimizer(self):
         args_dict = {
@@ -42,7 +43,6 @@ class CrosslingualTrainer:
 
         for epoch in tqdm(range(1, self.epochs + 1)):
 
-            sum_loss = 0.
 
             loss_rst_dict = defaultdict(float)
 
@@ -64,21 +64,15 @@ class CrosslingualTrainer:
                 batch_loss.backward()
                 optimizer.step()
 
-                sum_loss += batch_loss.item() * len(batch_bow_en)
-
             if self.lr_scheduler:
                 lr_scheduler.step()
 
-            sum_loss /= data_size
+            if epoch % self.log_interval == 0:
+                output_log = f'Epoch: {epoch:03d}'
+                for key in loss_rst_dict:
+                    output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
 
-            output_log = f'Epoch: {epoch:03d}'
-            for key in loss_rst_dict:
-                output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
-
-            print(output_log)
-
-        beta_en, beta_cn = self.export_beta()
-        return beta_en, beta_cn
+                print(output_log)
 
     def get_theta(self, bow, lang):
         theta_list = list()

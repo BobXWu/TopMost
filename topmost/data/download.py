@@ -6,7 +6,9 @@ from torchvision.datasets.utils import download_url
 def download_dataset(dataset_name, cache_path="~/.topmost"):
     cache_path = os.path.expanduser(cache_path)
     raw_filename = f'{dataset_name}.zip'
-    zipped_dataset_url = "https://raw.githubusercontent.com/BobXWu/Code-TopMost/master/topmost/datasets/preprocessed_data/{raw_filename}"
+    zipped_dataset_url = f"https://raw.githubusercontent.com/BobXWu/TopMost/master/datasets/preprocessed_data/{raw_filename}"
+
+    print(zipped_dataset_url)
 
     download_url(zipped_dataset_url, root=cache_path, filename=raw_filename, md5=None)
 
