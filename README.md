@@ -14,8 +14,7 @@ This is our survey on neural topic models: [A Survey on Neural Topic Models: Met
     - [2. Download a preprocessed dataset](#2-download-a-preprocessed-dataset)
     - [3. Train a model](#3-train-a-model)
     - [4. Evaluate](#4-evaluate)
-    - [5. Preprocessing new datasets (Optional)](#5-preprocessing-new-datasets-optional)
-    - [6. Test new documents (Optional)](#6-test-new-documents-optional)
+    - [5. Test new documents (Optional)](#5-test-new-documents-optional)
   - [Tutorials](#tutorials)
   - [Notice](#notice)
     - [Differences from original implementations](#differences-from-original-implementations)
@@ -189,50 +188,18 @@ results = topmost.evaluations.evaluate_classification(train_theta, test_theta, d
 print(results)
 ```
 
-### 5. Preprocessing new datasets (Optional)
-
-TopMost can preprocess datasets for topic modeling in a standard way.
-Here are the steps:
-
-1. Prepare datasets.
-
-    A dataset must include two files: `train.jsonlist` and `test.jsonlist`. Each contains a list of json, like
-
-```json
-  {"label": "rec.autos", "text": "WHAT car is this!?..."}
-  {"label": "comp.sys.mac.hardware", "text": "A fair number of brave souls who upgraded their..."}
-```
-
-2. Preprocess datasets.
-
-    Here we download and preprocess 20newsgroup.
-
-```python
-from topmost.data import download_20ng
-from topmost.preprocessing import Preprocessing
-
-# download stopwords
-download_dataset('stopwords', cache_path='./datasets')
-
-# download raw data
-download_20ng.download_save(output_dir=dataset_dir)
-
-preprocessing = Preprocessing(vocab_size=5000, stopwords='./datasets/stopwords/snowball_stopwords.txt')
-preprocessing.parse_dataset(dataset_dir=dataset_dir, label_name="group")
-```
-
-### 6. Test new documents (Optional)
+### 5. Test new documents (Optional)
 
 ```python
 # test new documents
 import torch
 
-new_texts = [
+new_docs = [
     "This is a new document about space, including words like space, satellite, launch, orbit.",
     "This is a new document about Microsoft Windows, including words like windows, files, dos."
 ]
 
-parsed_new_texts, new_bow = preprocessing.parse(new_texts, vocab=dataset.vocab)
+parsed_new_docs, new_bow = preprocessing.parse(new_docs, vocab=dataset.vocab)
 new_theta = runner.test(torch.as_tensor(new_bow, device=device).float())
 ```
 
