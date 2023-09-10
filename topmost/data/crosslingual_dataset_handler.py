@@ -26,12 +26,11 @@ class BilingualTextDataset(Dataset):
 
 
 class CrosslingualDatasetHandler:
-    def __init__(self, dataset_dir, dataset, lang1, lang2, dict_path, device='cpu', batch_size=200):
-        data_dir = f'{dataset_dir}/{dataset}'
+    def __init__(self, dataset_dir, lang1, lang2, dict_path, device='cpu', batch_size=200):
         self.batch_size = batch_size
 
-        self.train_texts_en, self.test_texts_en, self.train_bow_en, self.test_bow_en, self.train_labels_en, self.test_labels_en, self.vocab_en, self.word2id_en, self.id2word_en = self.read_data(data_dir, lang=lang1)
-        self.train_texts_cn, self.test_texts_cn, self.train_bow_cn, self.test_bow_cn, self.train_labels_cn, self.test_labels_cn, self.vocab_cn, self.word2id_cn, self.id2word_cn = self.read_data(data_dir, lang=lang2)
+        self.train_texts_en, self.test_texts_en, self.train_bow_en, self.test_bow_en, self.train_labels_en, self.test_labels_en, self.vocab_en, self.word2id_en, self.id2word_en = self.read_data(dataset_dir, lang=lang1)
+        self.train_texts_cn, self.test_texts_cn, self.train_bow_cn, self.test_bow_cn, self.train_labels_cn, self.test_labels_cn, self.vocab_cn, self.word2id_cn, self.id2word_cn = self.read_data(dataset_dir, lang=lang2)
 
         self.train_size_en = len(self.train_texts_en)
         self.train_size_cn = len(self.train_texts_cn)
@@ -40,8 +39,8 @@ class CrosslingualDatasetHandler:
 
         self.trans_dict, self.trans_matrix_en, self.trans_matrix_cn = self.parse_dictionary(dict_path)
 
-        self.pretrain_word_embeddings_en = scipy.sparse.load_npz(os.path.join(data_dir, f'word2vec_{lang1}.npz')).toarray()
-        self.pretrain_word_embeddings_cn = scipy.sparse.load_npz(os.path.join(data_dir, f'word2vec_{lang2}.npz')).toarray()
+        self.pretrain_word_embeddings_en = scipy.sparse.load_npz(os.path.join(dataset_dir, f'word2vec_{lang1}.npz')).toarray()
+        self.pretrain_word_embeddings_cn = scipy.sparse.load_npz(os.path.join(dataset_dir, f'word2vec_{lang2}.npz')).toarray()
 
         self.train_bow_en, self.test_bow_en = self.move_to_device(self.train_bow_en, self.test_bow_en, device)
         self.train_bow_cn, self.test_bow_cn = self.move_to_device(self.train_bow_cn, self.test_bow_cn, device)
@@ -52,18 +51,18 @@ class CrosslingualDatasetHandler:
     def move_to_device(self, train_bow, test_bow, device):
         return torch.as_tensor(train_bow, device=device).float(), torch.as_tensor(test_bow, device=device).float()
 
-    def read_data(self, data_dir, lang):
-        train_texts = file_utils.read_text(os.path.join(data_dir, 'train_texts_{}.txt'.format(lang)))
-        test_texts = file_utils.read_text(os.path.join(data_dir, 'test_texts_{}.txt'.format(lang)))
-        vocab = file_utils.read_text(os.path.join(data_dir, 'vocab_{}'.format(lang)))
+    def read_data(self, dataset_dir, lang):
+        train_texts = file_utils.read_text(os.path.join(dataset_dir, 'train_texts_{}.txt'.format(lang)))
+        test_texts = file_utils.read_text(os.path.join(dataset_dir, 'test_texts_{}.txt'.format(lang)))
+        vocab = file_utils.read_text(os.path.join(dataset_dir, 'vocab_{}'.format(lang)))
         word2id = dict(zip(vocab, range(len(vocab))))
         id2word = dict(zip(range(len(vocab)), vocab))
 
-        train_bow = scipy.sparse.load_npz(os.path.join(data_dir, 'train_bow_matrix_{}.npz'.format(lang))).toarray()
-        test_bow = scipy.sparse.load_npz(os.path.join(data_dir, 'test_bow_matrix_{}.npz'.format(lang))).toarray()
+        train_bow = scipy.sparse.load_npz(os.path.join(dataset_dir, 'train_bow_matrix_{}.npz'.format(lang))).toarray()
+        test_bow = scipy.sparse.load_npz(os.path.join(dataset_dir, 'test_bow_matrix_{}.npz'.format(lang))).toarray()
 
-        train_labels = np.loadtxt(f'{data_dir}/train_labels_{lang}.txt').astype('int32')
-        test_labels = np.loadtxt(f'{data_dir}/test_labels_{lang}.txt').astype('int32')
+        train_labels = np.loadtxt(f'{dataset_dir}/train_labels_{lang}.txt').astype('int32')
+        test_labels = np.loadtxt(f'{dataset_dir}/test_labels_{lang}.txt').astype('int32')
 
         return train_texts, test_texts, train_bow, test_bow, train_labels, test_labels, vocab, word2id, id2word
 

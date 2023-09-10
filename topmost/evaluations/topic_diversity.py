@@ -25,4 +25,4 @@ def compute_multiaspect_topic_diversity(top_words, _type="TD"):
         TD = compute_topic_diversity(level_top_words, _type)
         TD_list.append(TD)
 
-    print(f"TD: {np.mean(TD_list)}")
+    return np.mean(TD_list)

@@ -1,15 +1,14 @@
-# TopMost: A Topic Modeling System Toolkit
+# Towards the TopMost: A Topic Modeling System Toolkit
 
-TopMost provides a complete lifecycle of topic models, including dataset preprocessing, model training and evaluation.
-It covers the most popular topic modeling scenarios, like static, dynamic, hierarchical, and cross-lingual topic modeling.
+TopMost provides a complete lifecycle for topic models, including dataset preprocessing, model training, testing, and evaluations.
+It covers the most popular topic modeling scenarios: basic, hierarchical, dynamic, and cross-lingual topic modeling.
 
-This is our demo paper of TopMost: Towards the TopMost: A Topic Modeling System Toolkit.  
+This is our demo paper of TopMost: [Towards the TopMost: A Topic Modeling System Toolkit]().  
 This is our survey on neural topic models: [A Survey on Neural Topic Models: Methods, Applications, and Challenges](https://www.researchsquare.com/article/rs-3049182/latest.pdf).
 
 
-- [TopMost: A Topic Modeling System Toolkit](#topmost-a-topic-modeling-system-toolkit)
+- [Towards the TopMost: A Topic Modeling System Toolkit](#towards-the-topmost-a-topic-modeling-system-toolkit)
   - [Introduction](#introduction)
-    - [Topic Models](#topic-models)
   - [Quick Start](#quick-start)
     - [1. Install](#1-install)
     - [2. Download a preprocessed dataset](#2-download-a-preprocessed-dataset)
@@ -27,9 +26,7 @@ This is our survey on neural topic models: [A Survey on Neural Topic Models: Met
 
 ## Introduction
 
-### Topic Models
-
-We provide the following fundamental and recent models:
+TopMost offers the following topic modeling scenarios with models, evaluation metrics, and datasets:
 
 <table>
 <tbody>
@@ -40,15 +37,15 @@ We provide the following fundamental and recent models:
 <td>Datasets</td>
 </tr>
 <tr>
-<td>Static Topic Models</td>
+<td>Basic Topic Modeling</td>
 <td>
-    <a href="">LDA</a><br/>
-    <a href="">NMF</a><br/>
+    <a href="https://www.jmlr.org/papers/volume3/blei03a/blei03a.pdf">LDA</a><br/>
+    <a href="https://papers.nips.cc/paper/1861-algorithms-for-non-negative-matrix-factorization">NMF</a><br/>
     <a href="https://arxiv.org/pdf/1703.01488">ProdLDA</a><br/>
     <a href="https://aclanthology.org/2021.findings-acl.15.pdf">DecTM</a><br/>
     <a href="https://aclanthology.org/2020.tacl-1.29.pdf">ETM</a><br/>
     <a href="https://arxiv.org/abs/2008.13537">NSTM</a><br/>
-    <a href="">CTM</a><br/>
+    <a href="https://www.aclweb.org/anthology/2021.eacl-main.143/">CTM</a><br/>
     <a href="https://aclanthology.org/2022.emnlp-main.176">TSCTM</a><br/>
     <a href="https://arxiv.org/pdf/2306.04217">ECRTM</a>
 </td>
@@ -68,9 +65,11 @@ We provide the following fundamental and recent models:
 </td>
 </tr>
 <tr>
-<td>Hierarchical Topic Models</td>
+<td>Hierarchical Topic Modeling</td>
 <td>
-    <a href="https://arxiv.org/abs/2210.10625">HyperMiner</a><br/>
+    <a href="https://people.eecs.berkeley.edu/~jordan/papers/hdp.pdf">HDP</a><br/>
+    <a href="https://arxiv.org/pdf/2107.02757.pdf">DTM</a><br/>
+    <a href="https://arxiv.org/pdf/2210.10625.pdf">HyperMiner</a><br/>
     <a href="https://proceedings.mlr.press/v202/duan23c/duan23c.pdf">ProGBN</a>
 </td>
 <td>
@@ -89,8 +88,9 @@ We provide the following fundamental and recent models:
 </td>
 </tr>
 <tr>
-<td>Dynamic Topic Models</td>
+<td>Dynamic Topic Modeling</td>
 <td>
+    <a href="https://mimno.infosci.cornell.edu/info6150/readings/dynamic_topic_models.pdf">DTM</a><br/>
     <a href="https://arxiv.org/abs/2012.01524">DETM</a>
 </td>
 <td>
@@ -105,7 +105,7 @@ We provide the following fundamental and recent models:
 </td>
 </tr>
 <tr>
-<td>Cross-lingual Topic Models</td>
+<td>Cross-lingual Topic Modeling</td>
 <td>
     <a href="https://bobxwu.github.io/files/pub/NLPCC2020_Neural_Multilingual_Topic_Model.pdf">NMTM</a><br/>
     <a href="https://arxiv.org/abs/2304.03544">InfoCTM</a>
@@ -239,7 +239,7 @@ new_theta = runner.test(torch.as_tensor(new_bow, device=device).float())
 
 ## Tutorials
 
-We provide tutorials in `./tutorials`.
+We provide tutorials in [./tutorials](https://github.com/BobXWu/TopMost/tree/master/tutorials).
 
 ## Notice
 

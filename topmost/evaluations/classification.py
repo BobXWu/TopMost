@@ -1,3 +1,4 @@
+import numpy as np
 from sklearn.svm import SVC
 from sklearn.metrics import f1_score, accuracy_score
 from collections import defaultdict
@@ -45,12 +46,15 @@ def evaluate_crosslingual_classification(
 
 def evaluate_hierarchical_classification(train_theta, test_theta, train_labels, test_labels, classifier='SVM'):
     num_layer = len(train_theta)
-    result = defaultdict(list)
+    results = defaultdict(list)
 
     for layer in range(num_layer):
-        layer_result = evaluate_classification(train_theta[layer], test_theta[layer], train_labels, test_labels, classifier)
+        layer_results = evaluate_classification(train_theta[layer], test_theta[layer], train_labels, test_labels, classifier)
 
-        for key in layer_result:
-            result[key].append(layer_result[key])
+        for key in layer_results:
+            results[key].append(layer_results[key])
 
-    return result
+    for key in results:
+        results[key] = np.mean(results[key])
+
+    return results

@@ -1,5 +1,5 @@
 import numpy as np
-
+from collections import defaultdict
 from sklearn import metrics
 
 
@@ -32,3 +32,19 @@ def clustering_metric(labels, preds):
 def evaluate_clustering(theta, labels):
     preds = np.argmax(theta, axis=1)
     return clustering_metric(labels, preds)
+
+
+def evaluate_hierarchical_clustering(test_theta, test_labels):
+    num_layer = len(test_theta)
+    results = defaultdict(list)
+
+    for layer in range(num_layer):
+        layer_results = evaluate_clustering(test_theta[layer], test_labels)
+
+        for key in layer_results:
+            results[key].append(layer_results[key])
+
+    for key in results:
+        results[key] = np.mean(results[key])
+
+    return results

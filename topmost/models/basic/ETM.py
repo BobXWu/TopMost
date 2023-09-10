@@ -10,18 +10,15 @@ import torch.nn.functional as F
 
 
 class ETM(nn.Module):
-    def __init__(self, vocab_size, embedding_size=200, num_topics=50, en_units=800, dropout=0., pretrained_WE=None, init_WE=True, train_WE=False):
+    def __init__(self, vocab_size, embed_size=200, num_topics=50, en_units=800, dropout=0., pretrained_WE=None, train_WE=False):
         super().__init__()
 
-        if init_WE:
+        if pretrained_WE:
             self.word_embeddings = nn.Parameter(torch.from_numpy(pretrained_WE).float())
-            if train_WE:
-                print("===>Warning: word embeddings are trainable.")
-                self.word_embeddings.requires_grad = True
-            else:
-                self.word_embeddings.requires_grad = False
         else:
-            self.word_embeddings = nn.Parameter(torch.randn((vocab_size, embedding_size)))
+            self.word_embeddings = nn.Parameter(torch.randn((vocab_size, embed_size)))
+
+        self.word_embeddings.requires_grad = train_WE
 
         self.topic_embeddings = nn.Parameter(torch.randn((num_topics, self.word_embeddings.shape[1])))
 
