@@ -1,0 +1,6 @@
+sphinx
+furo
+sphinxcontrib-napoleon
+sphinx-autoapi
+sphinx-design
+sphinxcontrib-bibtex

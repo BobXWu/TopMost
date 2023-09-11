@@ -1,4 +1,4 @@
-# Towards the TopMost: A Topic Modeling System Toolkit
+#  <img src="docs/source/_static/topmost-logo.png" width=50px>  Towards the TopMost: A Topic Modeling System Toolkit
 
 TopMost provides a complete lifecycle for topic models, including dataset preprocessing, model training, testing, and evaluations.
 It covers the most popular topic modeling scenarios: basic, hierarchical, dynamic, and cross-lingual topic modeling.
@@ -7,7 +7,7 @@ This is our demo paper of TopMost: [Towards the TopMost: A Topic Modeling System
 This is our survey on neural topic models: [A Survey on Neural Topic Models: Methods, Applications, and Challenges](https://www.researchsquare.com/article/rs-3049182/latest.pdf).
 
 
-- [Towards the TopMost: A Topic Modeling System Toolkit](#towards-the-topmost-a-topic-modeling-system-toolkit)
+- [  Towards the TopMost: A Topic Modeling System Toolkit](#--towards-the-topmost-a-topic-modeling-system-toolkit)
   - [Introduction](#introduction)
   - [Quick Start](#quick-start)
     - [1. Install](#1-install)
@@ -248,5 +248,6 @@ please contact [Xiaobao Wu](xiaobao002@e.ntu.edu.sg).
 
 ## Acknowledgements
 
+- <a href="https://www.freepik.com/icon/top_671169">Icon by Flat-icons-com.</a>
 - If you want to add any models to this package, we welcome your pull requests.
 - If you encounter any problem, please either directly contact [Xiaobao Wu](xiaobao002@e.ntu.edu.sg) or leave an issue in the GitHub repo.
