@@ -23,10 +23,10 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
-    'sphinxcontrib.napoleon',
+    'sphinx.ext.napoleon',
     'sphinx.ext.autosectionlabel',  # allows referring sections its title, affects `ref`
     'sphinx_design',
-    'sphinxcontrib.bibtex',
+    # 'sphinxcontrib.bibtex',
     'sphinx.ext.autodoc'
     # 'sphinx.ext.imgconverter',  # for svg image to pdf
     # 'sphinxcontrib.inkscapeconverter',
