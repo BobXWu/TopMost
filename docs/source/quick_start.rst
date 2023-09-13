@@ -1,4 +1,5 @@
 
+
 ============
 Quick Start
 ============
@@ -15,7 +16,7 @@ Install topmost with ``pip`` as
 
 Download a preprocessed dataset
 -----------------------------------
-Download a preprocessed dataset from our github repo:
+Download a preprocessed dataset from our Github repo:
 
 .. code-block:: python
 

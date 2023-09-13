@@ -1,11 +1,11 @@
-    
+
 ============
 Overview
 ============
 
 TopMost offers the following topic modeling scenarios with models, evaluation metrics, and datasets:
 
-.. image:: ./_static/architecture.svg
+.. image:: _static/architecture.svg
     :width: 500
     :align: center
 
@@ -59,3 +59,4 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 
 .. _NMTM: https://bobxwu.github.io/files/pub/NLPCC2020_Neural_Multilingual_Topic_Model.pdf
 .. _InfoCTM: https://arxiv.org/abs/2304.03544
+

@@ -34,8 +34,8 @@ extensions = [
     'sphinx_design',
     'sphinxcontrib.bibtex',
     'sphinx.ext.autodoc',
-    'recommonmark',
-    'sphinx_markdown_tables'
+    # 'recommonmark',
+    # 'sphinx_markdown_tables'
     # 'sphinx.ext.imgconverter',  # for svg image to pdf
     # 'sphinxcontrib.inkscapeconverter',
 ]
