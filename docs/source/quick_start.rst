@@ -1,62 +1,88 @@
-*************
+
+============
 Quick Start
-*************
+============
 
-.. code-block::python
+Install
+-----------------
 
-  {"label": "rec.autos", "text": "WHAT car is this!?..."}
-  {"label": "comp.sys.mac.hardware", "text": "A fair number of brave souls who upgraded their..."}
+Install topmost with ``pip`` as 
 
+.. code-block:: console
 
-.. code-block::python
-
-    import topmost
-
-    preprocessing = topmost.preprocessing.Preprocessing(stopwords_dir="...")
-    preprocessing.parse(dataset_dir="...", label_name="label")
-    preprocessing.save(output_dir="...")
+    $ pip install topmost
 
 
+Download a preprocessed dataset
+-----------------------------------
+Download a preprocessed dataset from our github repo:
 
-
-.. code-block::python
+.. code-block:: python
 
     import topmost
+    from topmost.data import download_dataset
+
+    dataset_dir = "./datasets/20NG"
+    download_dataset('20NG', cache_path='./datasets')
+
+
+Train a model
+-----------------------------------
+
+.. code-block:: python
 
     device = "cuda" # or "cpu"
 
     # load a preprocessed dataset
-    dataset_handler = topmost.data.StaticDatasetHandler("20NG", device)
+    dataset = topmost.data.BasicDatasetHandler(dataset_dir, device=device, read_labels=True, as_tensor=True)
     # create a model
-    model = topmost.models.ETM(vocab_size=dataset_handler.vocab_size, pretrained_WE=dataset_handler.pretrained_WE)
+    model = topmost.models.ETM(vocab_size=dataset.vocab_size, pretrained_WE=dataset.pretrained_WE)
     model = model.to(device)
 
-    # create a runner
-    runner = topmost.runners.StaticRunner(model, dataset_handler, epochs=2)
+    # create a trainer
+    trainer = topmost.trainers.BasicTrainer(model, dataset)
+
     # train the model
-    runner.train()
+    trainer.train()
 
 
+Evaluate
+-----------------------------------
 
 .. code-block:: python
 
     # evaluate
     # get theta (doc-topic distributions)
-    train_theta, test_theta = runner.export_theta()
-
+    train_theta, test_theta = trainer.export_theta()
     # get top words of topics
-    top_words = runner.export_top_words(num_top=15)
-
-    # evaluate clustering
-    results = topmost.evaluations.evaluate_clustering(test_theta, dataset_handler.test_labels)
-    print(results)
-
-    # evaluate classification
-    results = topmost.evaluations.evaluate_classification(train_theta, test_theta, dataset_handler.train_labels, dataset_handler.test_labels)
-    print(results)
-
-    # evaluate topic coherence
+    top_words = trainer.export_top_words()
 
     # evaluate topic diversity
     TD = topmost.evaluations.compute_topic_diversity(top_words, _type="TD")
     print(f"TD: {TD:.5f}")
+
+    # evaluate clustering
+    results = topmost.evaluations.evaluate_clustering(test_theta, dataset.test_labels)
+    print(results)
+
+    # evaluate classification
+    results = topmost.evaluations.evaluate_classification(train_theta, test_theta, dataset.train_labels, dataset.test_labels)
+    print(results)
+
+
+Test new documents (Optional)
+-----------------------------------
+
+.. code-block:: python
+
+    # test new documents
+    import torch
+
+    new_docs = [
+        "This is a new document about space, including words like space, satellite, launch, orbit.",
+        "This is a new document about Microsoft Windows, including words like windows, files, dos."
+    ]
+
+    parsed_new_docs, new_bow = preprocessing.parse(new_docs, vocab=dataset.vocab)
+    new_theta = runner.test(torch.as_tensor(new_bow, device=device).float())
+

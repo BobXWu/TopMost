@@ -1,13 +1,15 @@
 from setuptools import setup, find_packages
 
 
-with open("./README.md", "r") as file:
-    LONG_DESCRIPTION = file.read()
+# with open("./README.rst", "r") as file:
+#     LONG_DESCRIPTION = file.read()
 
 
 VERSION = '0.0.1'
 DESCRIPTION = 'Towards the Topmost: A Topic Modeling System Tookit'
-
+LONG_DESCRIPTION = """
+    [TopMost](https://github.com/bobxwu/topmost) provides complete lifecycles of topic modeling, including dataset preprocessing, model training, testing and evaluations. It covers the most popular topic modeling scenarios, like static, dynamic, hierarchical, and cross-lingual topic modeling.
+"""
 
 # Setting up
 setup(

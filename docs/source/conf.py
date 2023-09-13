@@ -6,6 +6,11 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+import os
+import sys
+sys.path.append("../")
+sys.path.append("../../")
+
 project = 'TopMost'
 copyright = '2023, Xiaobao Wu'
 author = 'Xiaobao Wu'
@@ -17,24 +22,31 @@ author = 'Xiaobao Wu'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    # 'autoapi.extension',  # this one is really important
+    'autoapi.extension',  # this one is really important
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.mathjax',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx.ext.napoleon',
+    #'sphinxcontrib.napoleon',
     'sphinx.ext.autosectionlabel',  # allows referring sections its title, affects `ref`
     'sphinx_design',
-    # 'sphinxcontrib.bibtex',
-    'sphinx.ext.autodoc'
+    'sphinxcontrib.bibtex',
+    'sphinx.ext.autodoc',
+    'recommonmark',
+    'sphinx_markdown_tables'
     # 'sphinx.ext.imgconverter',  # for svg image to pdf
     # 'sphinxcontrib.inkscapeconverter',
 ]
-# autoapi_type = 'python'
-# autoapi_dirs = ['../../topmost']
-# autoapi_template_dir = '_autoapi_templates'
+
+autoapi_type = 'python'
+autoapi_dirs = ['../../topmost']
+autoapi_template_dir = '_autoapi_templates'
+autoapi_python_class_content = 'both' 
+
 add_module_names = False  # makes Sphinx render package.module.Class as Class
+
 
 # Add more mapping for 'sphinx.ext.intersphinx'
 intersphinx_mapping = {'python': ('https://docs.python.org/3', None),
@@ -62,16 +74,14 @@ templates_path = ['_templates']
 exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
-
-# html_theme = 'sphinx_rtd_theme'
-
-
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
+
 # html_theme = 'alabaster'
+#html_theme = 'sphinx_rtd_theme'
 html_theme = "furo"
-html_favicon = "../imgs/favicon.png"
+html_favicon = "./_static/topmost-logo.png"
+html_favicon_width = '20px'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -85,7 +95,9 @@ html_theme_options = {
     #     </a>
     # """,
     "sidebar_hide_name": True,
-    "light_logo": "topmost-logo.svg",
-    "dark_logo": "topmost-logo.svg",
+    "light_logo": "topmost-logo.png",
+    "dark_logo": "topmost-logo.png",
 }
-# html_logo = "topmost-logo.svg"
+
+# html_logo = "topmost-logo.png"
+# html_logo_width = '20px'
