@@ -4,6 +4,11 @@ import torch.nn.functional as F
 
 
 class TAMI(nn.Module):
+    '''
+        InfoCTM: A Mutual Information Maximization Perspective of Cross-lingual Topic Modeling. AAAI 2023
+
+        Xiaobao Wu, Xinshuai Dong, Thong Nguyen, Chaoqun Liu, Liangming Pan, Anh Tuan Luu
+    '''
     def __init__(self, temperature, weight_MI, pos_threshold, trans_e2c, pretrain_word_embeddings_en, pretrain_word_embeddings_cn):
         super().__init__()
         self.temperature = temperature

@@ -1,7 +1,3 @@
-"""
-Sawtooth Factorial Topic Embeddings Guided Gamma Belief Network. ICML 2021.
-https://github.com/ZhibinDuan/SawETM
-"""
 
 import torch
 import torch.nn as nn
@@ -10,6 +6,13 @@ from .block import ResBlock
 
 
 class SawETM(nn.Module):
+    """
+        Sawtooth Factorial Topic Embeddings Guided Gamma Belief Network. ICML 2021.
+
+        Zhibin Duan, Dongsheng Wang, Bo Chen, Chaojie Wang, Wenchao Chen, Yewen Li, Jie Ren, Mingyuan Zhou.
+
+        https://github.com/ZhibinDuan/SawETM
+    """
     def __init__(self, vocab_size, num_topics_list, device, embed_size=100, hidden_size=256, pretrained_WE=None):
         super().__init__()
         # constants
@@ -22,9 +25,6 @@ class SawETM(nn.Module):
 
         # hyper-parameters
         self.num_topics_list = num_topics_list[::-1]
-        # self.num_topics_list = [args.num_topic, 36, 12, 2]
-        # self.num_hiddens_list = self.num_hiddens_list
-        # self.num_hiddens_list = [300, 300, 300, 300]
         self.num_hiddens_list = [hidden_size] * len(self.num_topics_list)
 
         assert len(self.num_topics_list) == len(self.num_hiddens_list)

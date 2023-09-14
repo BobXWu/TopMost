@@ -1,7 +1,3 @@
-'''
-Discovering Topics in Long-tailed Corpora with Causal Intervention. ACL 2021 findings.
-Xiaobao Wu, Chunping Li, Yishu Miao
-'''
 
 
 
@@ -12,6 +8,11 @@ import numpy as np
 
 
 class DecTM(nn.Module):
+    '''
+        Discovering Topics in Long-tailed Corpora with Causal Intervention. ACL 2021 findings.
+
+        Xiaobao Wu, Chunping Li, Yishu Miao.
+    '''
     def __init__(self, vocab_size, num_topics=50, en_units=200, dropout=0.4):
         super().__init__()
 

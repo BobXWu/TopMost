@@ -5,6 +5,7 @@ from .basic.NSTM.NSTM import NSTM
 from .basic.TSCTM.TSCTM import TSCTM
 from .basic.ECRTM.ECRTM import ECRTM
 
+from .crosslingual.NMTM import NMTM
 from .crosslingual.InfoCTM.InfoCTM import InfoCTM
 
 from .dynamic.DETM import DETM

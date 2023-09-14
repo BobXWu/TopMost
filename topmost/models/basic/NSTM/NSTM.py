@@ -1,7 +1,3 @@
-'''
-Neural Topic Model via Optimal Transport. ICLR 2021
-He Zhao, Dinh Phung, Viet Huynh, Trung Le, Wray Buntine
-'''
 
 
 import torch
@@ -11,6 +7,11 @@ from .auto_diff_sinkhorn import sinkhorn_loss
 
 
 class NSTM(nn.Module):
+    '''
+        Neural Topic Model via Optimal Transport. ICLR 2021
+
+        He Zhao, Dinh Phung, Viet Huynh, Trung Le, Wray Buntine.
+    '''
     def __init__(self, vocab_size, num_topics=50, en_units=200, dropout=0.25, pretrained_WE=None, train_WE=True, recon_loss_weight=0.07, sinkhorn_alpha=20):
         super().__init__()
 

@@ -1,7 +1,3 @@
-"""
-HyperMiner: Topic Taxonomy Mining with Hyperbolic Embedding. NeurIPS 2022.
-https://github.com/NoviceStone/HyperMiner
-"""
 
 import torch
 import torch.nn as nn
@@ -11,6 +7,13 @@ from ..SawETM.SawETM import SawETM
 
 
 class HyperMiner(SawETM):
+    """
+        HyperMiner: Topic Taxonomy Mining with Hyperbolic Embedding. NeurIPS 2022.
+
+        Yishi Xu, Dongsheng Wang, Bo Chen, Ruiying Lu, Zhibin Duan, Mingyuan Zhou.
+
+        https://github.com/NoviceStone/HyperMiner
+    """
     def __init__(self, vocab_size, num_topics_list, device, manifold="PoincareBall", clip_r=None, curvature=-0.01, embed_size=50, hidden_size=300, pretrained_WE=None):
         super().__init__(vocab_size, num_topics_list, device, embed_size, hidden_size, pretrained_WE)
 

@@ -39,17 +39,22 @@ class CrosslingualDatasetHandler:
 
         self.trans_dict, self.trans_matrix_en, self.trans_matrix_cn = self.parse_dictionary(dict_path)
 
-        self.pretrain_word_embeddings_en = scipy.sparse.load_npz(os.path.join(dataset_dir, f'word2vec_{lang1}.npz')).toarray()
-        self.pretrain_word_embeddings_cn = scipy.sparse.load_npz(os.path.join(dataset_dir, f'word2vec_{lang2}.npz')).toarray()
+        self.pretrained_WE_en = scipy.sparse.load_npz(os.path.join(dataset_dir, f'word2vec_{lang1}.npz')).toarray()
+        self.pretrained_WE_cn = scipy.sparse.load_npz(os.path.join(dataset_dir, f'word2vec_{lang2}.npz')).toarray()
 
-        self.train_bow_en, self.test_bow_en = self.move_to_device(self.train_bow_en, self.test_bow_en, device)
-        self.train_bow_cn, self.test_bow_cn = self.move_to_device(self.train_bow_cn, self.test_bow_cn, device)
+        self.Map_en2cn = self.get_Map(self.trans_matrix_en, self.train_bow_en)
+        self.Map_cn2en = self.get_Map(self.trans_matrix_cn, self.train_bow_cn)
+
+        self.train_bow_en = self.move_to_device(self.train_bow_en, device)
+        self.test_bow_en = self.move_to_device(self.test_bow_en, device)
+        self.train_bow_cn = self.move_to_device(self.train_bow_cn, device)
+        self.test_bow_cn = self.move_to_device(self.test_bow_cn, device)
 
         self.train_dataloader = DataLoader(BilingualTextDataset(self.train_bow_en, self.train_bow_cn), batch_size=batch_size, shuffle=True)
         self.test_dataloader = DataLoader(BilingualTextDataset(self.test_bow_en, self.test_bow_cn), batch_size=batch_size, shuffle=False)
 
-    def move_to_device(self, train_bow, test_bow, device):
-        return torch.as_tensor(train_bow, device=device).float(), torch.as_tensor(test_bow, device=device).float()
+    def move_to_device(self, bow, device):
+        return torch.as_tensor(bow, device=device).float()
 
     def read_data(self, dataset_dir, lang):
         train_texts = file_utils.read_text(os.path.join(dataset_dir, 'train_texts_{}.txt'.format(lang)))
@@ -89,3 +94,12 @@ class CrosslingualDatasetHandler:
                     trans_matrix_cn[cn_term_id][en_term_id] = 1
 
         return trans_dict, trans_matrix_en, trans_matrix_cn
+
+    def get_Map(self, trans_matrix, bow):
+        Map = (trans_matrix * bow.sum(0)[:, np.newaxis]).astype('float32')
+        Map = Map + 1
+        Map_sum = np.sum(Map, axis=1)
+        t_index = Map_sum > 0
+        Map[t_index, :] = Map[t_index, :] / Map_sum[t_index, np.newaxis]
+
+        return Map

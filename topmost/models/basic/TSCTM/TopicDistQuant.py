@@ -1,7 +1,3 @@
-'''
-Short Text Topic Modeling with Topic Distribution Quantization and Negative Sampling Decoder. EMNLP 2020
-Xiaobao Wu, Chunping Li, Yan Zhu, Yishu Miao
-'''
 
 import torch
 import torch.nn as nn
@@ -9,6 +5,11 @@ import torch.nn.functional as F
 
 
 class TopicDistQuant(nn.Module):
+    '''
+        Short Text Topic Modeling with Topic Distribution Quantization and Negative Sampling Decoder. EMNLP 2020
+
+        Xiaobao Wu, Chunping Li, Yan Zhu, Yishu Miao
+    '''
     def __init__(self, num_embeddings, embedding_dim, commitment_cost=0.1):
         super().__init__()
 

@@ -1,9 +1,3 @@
-'''
-InfoCTM: A Mutual Information Maximization Perspective of Cross-lingual Topic Modeling. AAAI 2023
-Xiaobao Wu, Xinshuai Dong, Thong Nguyen, Chaoqun Liu, Liangming Pan, Anh Tuan Luu
-'''
-
-
 import numpy as np
 import torch
 import torch.nn as nn
@@ -13,6 +7,11 @@ from .TAMI import TAMI
 
 
 class InfoCTM(nn.Module):
+    '''
+        InfoCTM: A Mutual Information Maximization Perspective of Cross-lingual Topic Modeling. AAAI 2023
+
+        Xiaobao Wu, Xinshuai Dong, Thong Nguyen, Chaoqun Liu, Liangming Pan, Anh Tuan Luu
+    '''
     def __init__(self, trans_e2c, pretrain_word_embeddings_en, pretrain_word_embeddings_cn, vocab_size_en, vocab_size_cn, num_topics=50, en_units=200, dropout=0., temperature=0.2, pos_threshold=0.4, weight_MI=30.0):
         super().__init__()
 

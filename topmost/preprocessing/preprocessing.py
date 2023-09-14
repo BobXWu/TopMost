@@ -133,32 +133,33 @@ def make_word_embeddings(vocab):
 class Preprocessing:
     def __init__(self, test_sample_size=None, test_p=0.2, stopwords="snowball", min_doc_count=0, max_doc_freq=1.0, keep_num=False, keep_alphanum=False, strip_html=False, no_lower=False, min_length=3, min_term=1, vocab_size=None, seed=42):
         """
-        test_sample_size:
-            Size of the test set.
-        test_p:
-            Proportion of the test set. This helps sample the train set based on the size of the test set.
-        stopwords:
-            List of stopwords to exclude [None|mallet|snowball].
-        min-doc-count:
-            Exclude words that occur in less than this number of documents.
-        max_doc_freq:
-            Exclude words that occur in more than this proportion of documents.
-        keep-num:
-            Keep tokens made of only numbers.
-        keep-alphanum:
-            Keep tokens made of a mixture of letters and numbers.
-        strip_html:
-            Strip HTML tags.
-        no-lower:
-            Do not lowercase text
-        min_length:
-            Minimum token length.
-        min_term:
-            Minimum term number
-        vocab-size:
-            Size of the vocabulary (by most common in the union of train and test sets, following above exclusions)
-        seed:
-            Random integer seed (only relevant for choosing test set)
+        Args:
+            test_sample_size:
+                Size of the test set.
+            test_p:
+                Proportion of the test set. This helps sample the train set based on the size of the test set.
+            stopwords:
+                List of stopwords to exclude [None|mallet|snowball].
+            min-doc-count:
+                Exclude words that occur in less than this number of documents.
+            max_doc_freq:
+                Exclude words that occur in more than this proportion of documents.
+            keep-num:
+                Keep tokens made of only numbers.
+            keep-alphanum:
+                Keep tokens made of a mixture of letters and numbers.
+            strip_html:
+                Strip HTML tags.
+            no-lower:
+                Do not lowercase text
+            min_length:
+                Minimum token length.
+            min_term:
+                Minimum term number
+            vocab-size:
+                Size of the vocabulary (by most common in the union of train and test sets, following above exclusions)
+            seed:
+                Random integer seed (only relevant for choosing test set)
         """
 
         self.test_sample_size = test_sample_size
@@ -307,3 +308,4 @@ class Preprocessing:
         np.savetxt(f"{output_dir}/train_labels.txt", self.train_labels, fmt='%i')
         np.savetxt(f"{output_dir}/test_labels.txt", self.test_labels, fmt='%i')
         file_utils.save_text(self.vocab, f"{output_dir}/vocab.txt")
+

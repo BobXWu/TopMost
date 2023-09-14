@@ -1,7 +1,3 @@
-"""
-The Dynamic Embedded Topic Model. 2019
-Adji B. Dieng, Francisco J. R. Ruiz, David M. Blei
-"""
 
 import torch
 from torch import nn
@@ -9,6 +5,11 @@ import torch.nn.functional as F
 
 
 class DETM(nn.Module):
+    """
+        The Dynamic Embedded Topic Model. 2019
+
+        Adji B. Dieng, Francisco J. R. Ruiz, David M. Blei
+    """
     def __init__(self, vocab_size, num_times, train_size, device, train_time_wordfreq, num_topics=50, train_WE=True, pretrained_WE=None, en_units=800, eta_hidden_size=200, rho_size=300, enc_drop=0.0, eta_nlayers=3, eta_dropout=0.0, delta=0.005, theta_act='relu'):
         super().__init__()
 

@@ -1,10 +1,3 @@
-'''
-Mitigating Data Sparsity for Short Text Topic Modeling by Topic-Semantic Contrastive Learning. EMNLP 2022
-Xiaobao Wu, Anh Tuan Luu, Xinshuai Dong.
-
-Note: This implementation does not include TSCTM with augmentations. For augmentations, see https://github.com/BobXWu/TSCTM.
-'''
-
 
 import torch
 import torch.nn as nn
@@ -14,6 +7,14 @@ from .TSC import TSC
 
 
 class TSCTM(nn.Module):
+    '''
+        Mitigating Data Sparsity for Short Text Topic Modeling by Topic-Semantic Contrastive Learning. EMNLP 2022
+
+        Xiaobao Wu, Anh Tuan Luu, Xinshuai Dong.
+
+        Note: This implementation does not include TSCTM with augmentations. For augmentations, see https://github.com/BobXWu/TSCTM.
+    '''
+
     def __init__(self, vocab_size, num_topics=50, en_units=200, temperature=0.5, weight_contrast=1.0):
         super().__init__()
 

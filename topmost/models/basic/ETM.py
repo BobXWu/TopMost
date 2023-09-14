@@ -1,7 +1,3 @@
-'''
-Topic Modeling in Embedding Spaces. TACL 2020
-Adji B. Dieng, Francisco J. R. Ruiz, David M. Blei
-'''
 
 
 import torch
@@ -10,6 +6,11 @@ import torch.nn.functional as F
 
 
 class ETM(nn.Module):
+    '''
+        Topic Modeling in Embedding Spaces. TACL 2020
+
+        Adji B. Dieng, Francisco J. R. Ruiz, David M. Blei.
+    '''
     def __init__(self, vocab_size, embed_size=200, num_topics=50, en_units=800, dropout=0., pretrained_WE=None, train_WE=False):
         super().__init__()
 

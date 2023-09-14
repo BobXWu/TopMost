@@ -1,7 +1,3 @@
-'''
-Autoencoding Variational Inference For Topic Models. ICLR 2017
-Akash Srivastava, Charles Sutton
-'''
 
 
 import torch
@@ -11,6 +7,11 @@ import numpy as np
 
 
 class ProdLDA(nn.Module):
+    '''
+        Autoencoding Variational Inference For Topic Models. ICLR 2017
+
+        Akash Srivastava, Charles Sutton.
+    '''
     def __init__(self, vocab_size, num_topics=50, en_units=200, dropout=0.4):
         super().__init__()
 
