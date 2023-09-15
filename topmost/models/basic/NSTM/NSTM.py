@@ -12,7 +12,7 @@ class NSTM(nn.Module):
 
         He Zhao, Dinh Phung, Viet Huynh, Trung Le, Wray Buntine.
     '''
-    def __init__(self, vocab_size, num_topics=50, en_units=200, dropout=0.25, pretrained_WE=None, train_WE=True, recon_loss_weight=0.07, sinkhorn_alpha=20):
+    def __init__(self, vocab_size, num_topics=50, en_units=200, dropout=0.25, pretrained_WE=None, train_WE=True, embed_size=200, recon_loss_weight=0.07, sinkhorn_alpha=20):
         super().__init__()
 
         self.recon_loss_weight = recon_loss_weight
@@ -24,12 +24,12 @@ class NSTM(nn.Module):
         self.mean_bn = nn.BatchNorm1d(num_topics)
         self.mean_bn.weight.requires_grad = False
 
-        self.word_embeddings = nn.Parameter(torch.from_numpy(pretrained_WE).float())
-        if train_WE:
-            print("===>Warning: word embeddings are trainable.")
-            self.word_embeddings.requires_grad = True
+        if pretrained_WE is not None:
+            self.word_embeddings = nn.Parameter(torch.from_numpy(pretrained_WE).float())
         else:
-            self.word_embeddings.requires_grad = False
+            self.word_embeddings = nn.Parameter(torch.randn((vocab_size, embed_size)))
+
+        self.word_embeddings.requires_grad = train_WE
 
         self.topic_embeddings = torch.empty((num_topics, self.word_embeddings.shape[1]))
         nn.init.trunc_normal_(self.topic_embeddings, std=0.1)

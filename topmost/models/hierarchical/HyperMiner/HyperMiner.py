@@ -14,7 +14,7 @@ class HyperMiner(SawETM):
 
         https://github.com/NoviceStone/HyperMiner
     """
-    def __init__(self, vocab_size, num_topics_list, device, manifold="PoincareBall", clip_r=None, curvature=-0.01, embed_size=50, hidden_size=300, pretrained_WE=None):
+    def __init__(self, vocab_size, num_topics_list, device='cpu', manifold="PoincareBall", clip_r=None, curvature=-0.01, embed_size=50, hidden_size=300, pretrained_WE=None):
         super().__init__(vocab_size, num_topics_list, device, embed_size, hidden_size, pretrained_WE)
 
         self.manifold = getattr(manifolds, manifold)()

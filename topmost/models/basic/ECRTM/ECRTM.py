@@ -38,7 +38,7 @@ class ECRTM(nn.Module):
         self.decoder_bn = nn.BatchNorm1d(vocab_size, affine=True)
         self.decoder_bn.weight.requires_grad = False
 
-        if pretrained_WE:
+        if pretrained_WE is not None:
             self.word_embeddings = torch.from_numpy(pretrained_WE).float()
         else:
             self.word_embeddings = nn.init.trunc_normal_(torch.empty(vocab_size, embed_size))

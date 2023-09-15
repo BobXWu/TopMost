@@ -26,7 +26,7 @@ class BilingualTextDataset(Dataset):
 
 
 class CrosslingualDatasetHandler:
-    def __init__(self, dataset_dir, lang1, lang2, dict_path, device='cpu', batch_size=200):
+    def __init__(self, dataset_dir, lang1, lang2, dict_path, device='cpu', batch_size=200, as_tensor=True):
         self.batch_size = batch_size
 
         self.train_texts_en, self.test_texts_en, self.train_bow_en, self.test_bow_en, self.train_labels_en, self.test_labels_en, self.vocab_en, self.word2id_en, self.id2word_en = self.read_data(dataset_dir, lang=lang1)
@@ -45,13 +45,14 @@ class CrosslingualDatasetHandler:
         self.Map_en2cn = self.get_Map(self.trans_matrix_en, self.train_bow_en)
         self.Map_cn2en = self.get_Map(self.trans_matrix_cn, self.train_bow_cn)
 
-        self.train_bow_en = self.move_to_device(self.train_bow_en, device)
-        self.test_bow_en = self.move_to_device(self.test_bow_en, device)
-        self.train_bow_cn = self.move_to_device(self.train_bow_cn, device)
-        self.test_bow_cn = self.move_to_device(self.test_bow_cn, device)
+        if as_tensor:
+            self.train_bow_en = self.move_to_device(self.train_bow_en, device)
+            self.test_bow_en = self.move_to_device(self.test_bow_en, device)
+            self.train_bow_cn = self.move_to_device(self.train_bow_cn, device)
+            self.test_bow_cn = self.move_to_device(self.test_bow_cn, device)
 
-        self.train_dataloader = DataLoader(BilingualTextDataset(self.train_bow_en, self.train_bow_cn), batch_size=batch_size, shuffle=True)
-        self.test_dataloader = DataLoader(BilingualTextDataset(self.test_bow_en, self.test_bow_cn), batch_size=batch_size, shuffle=False)
+            self.train_dataloader = DataLoader(BilingualTextDataset(self.train_bow_en, self.train_bow_cn), batch_size=batch_size, shuffle=True)
+            self.test_dataloader = DataLoader(BilingualTextDataset(self.test_bow_en, self.test_bow_cn), batch_size=batch_size, shuffle=False)
 
     def move_to_device(self, bow, device):
         return torch.as_tensor(bow, device=device).float()

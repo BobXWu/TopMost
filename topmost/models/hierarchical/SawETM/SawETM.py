@@ -13,7 +13,7 @@ class SawETM(nn.Module):
 
         https://github.com/ZhibinDuan/SawETM
     """
-    def __init__(self, vocab_size, num_topics_list, device, embed_size=100, hidden_size=256, pretrained_WE=None):
+    def __init__(self, vocab_size, num_topics_list, device='cpu', embed_size=100, hidden_size=256, pretrained_WE=None):
         super().__init__()
         # constants
         self.device = device
