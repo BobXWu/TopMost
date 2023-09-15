@@ -18,8 +18,7 @@ This is the preferred method to install TopMost, as it will always install the m
 From sources
 ------------
 
-The sources for TopMost can be downloaded from the `Github repo`_.
-
+The sources for TopMost can be downloaded from the Github repository.
 You can clone the public repository by
 
 .. code-block:: console

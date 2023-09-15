@@ -23,8 +23,8 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 |                              | |             |                                            |                 |
 +------------------------------+---------------+--------------------------------------------+-----------------+
 |                              |               |                                            | | 20NG          |
-|                              |               | | TC over levels                           | | IMDB          |
-| | Hierarchical               | | HDP_        | | TD over levels                           | | NeurIPS       |
+|                              | | HDP_        | | TC over levels                           | | IMDB          |
+| | Hierarchical               | | SawETM_     | | TD over levels                           | | NeurIPS       |
 | | Topic Modeling             | | HyperMiner_ | | Clustering over levels                   | | ACL           |
 |                              | | ProGBN_     | | Classification over levels               | | NYT           |
 |                              |               |                                            | | Wikitext-103  |
@@ -51,6 +51,7 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 .. _ECRTM: https://arxiv.org/pdf/2306.04217.pdf
 
 .. _HDP: https://people.eecs.berkeley.edu/~jordan/papers/hdp.pdf
+.. _SawETM: http://proceedings.mlr.press/v139/duan21b/duan21b.pdf
 .. _HyperMiner: https://arxiv.org/pdf/2210.10625.pdf
 .. _ProGBN: https://proceedings.mlr.press/v202/duan23c/duan23c.pdf
 
