@@ -2,33 +2,36 @@ from gensim.corpora import Dictionary
 from gensim.models import CoherenceModel
 import numpy as np
 from tqdm import tqdm
-from ..data import file_utils
+from ..data.file_utils import split_text_word
 
 
-def compute_TC(reference_texts, dictionary, topics, num_top_words=15, cv_type='c_v'):
-    cm = CoherenceModel(texts=reference_texts, dictionary=dictionary, topics=topics, topn=num_top_words, coherence=cv_type)
+def compute_topic_coherence(reference_corpus, vocab, top_words, cv_type='c_v'):
+    split_top_words = split_text_word(top_words)
+    num_top_words = len(split_top_words[0])
+    for item in split_top_words:
+        assert num_top_words == len(item)
+
+    split_reference_corpus = split_text_word(reference_corpus)
+    dictionary = Dictionary(split_text_word(vocab))
+
+    cm = CoherenceModel(texts=split_reference_corpus, dictionary=dictionary, topics=split_top_words, topn=num_top_words, coherence=cv_type)
     cv_per_topic = cm.get_coherence_per_topic()
     score = np.mean(cv_per_topic)
 
     return score
 
 
-def compute_dynamic_TC(train_texts, train_times, vocab, top_words_list, num_top_words=15, cv_type='c_v'):
-    dictionary = Dictionary(file_utils.split_text_word(vocab))
-    split_train_texts = file_utils.split_text_word(train_texts)
-
+def compute_dynamic_TC(train_texts, train_times, vocab, top_words_list, cv_type='c_v'):
     cv_score_list = list()
 
     for time in tqdm(range(len(top_words_list))):
-        # use the texts of the time slice as reference.
+        # use the texts of each time slice as the reference corpus.
         idx = np.where(train_times == time)[0]
-        reference_texts = [split_train_texts[i] for i in idx]
+        reference_corpus = [train_texts[i] for i in idx]
 
         # use the the topics at the time slice
         top_words = top_words_list[time]
-        split_top_words = file_utils.split_text_word(top_words)
-
-        cv_score = compute_TC(reference_texts, dictionary, split_top_words, num_top_words, cv_type)
+        cv_score = compute_topic_coherence(reference_corpus, vocab, top_words, cv_type)
         cv_score_list.append(cv_score)
 
     print("===>CV score list: ", cv_score_list)

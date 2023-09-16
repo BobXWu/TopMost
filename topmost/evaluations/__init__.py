@@ -5,3 +5,4 @@ from .clustering import evaluate_hierarchical_clustering
 from .classification import *
 
 from .topic_coherence import compute_dynamic_TC
+from .topic_coherence import compute_topic_coherence

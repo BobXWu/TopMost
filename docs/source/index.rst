@@ -22,7 +22,7 @@
 
 
 
-TopMost provides complete lifecycles of topic modeling, including dataset preprocessing, model training, testing, and evaluations. It covers the most popular topic modeling scenarios, like static, dynamic, hierarchical, and cross-lingual topic modeling.
+TopMost provides complete lifecycles of topic modeling, including dataset preprocessing, model training, testing, and evaluations. It covers the most popular topic modeling scenarios, like basic, dynamic, hierarchical, and cross-lingual topic modeling.
 
 | This is our demo paper `Towards the TopMost: A Topic Modeling System Toolkit <https://arxiv.org/pdf/2309.06908.pdf>`_.
 | This is our survey paper on neural topic models: `A Survey on Neural Topic Models: Methods, Applications, and Challenges <https://assets.researchsquare.com/files/rs-3049182/v1_covered_557a6d7a-c326-45c0-98e2-028fb25af7ba.pdf?c=1686720142>`_.

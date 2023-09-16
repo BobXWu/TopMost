@@ -5,7 +5,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 def compute_TD(texts):
     K = len(texts)
     T = len(texts[0].split())
-    vectorizer = CountVectorizer()
+    vectorizer = CountVectorizer(tokenizer=lambda x: x.split())
     counter = vectorizer.fit_transform(texts).toarray()
 
     TF = counter.sum(axis=0)
