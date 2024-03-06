@@ -1,20 +1,9 @@
 import os
-import argparse
-import yaml
 import json
 
 
 def make_dir(path):
     os.makedirs(path, exist_ok=True)
-
-
-def update_args(args, path):
-    with open(path) as file:
-        config = yaml.safe_load(file)
-        if config:
-            args = vars(args)
-            args.update(config)
-            args = argparse.Namespace(**args)
 
 
 def read_text(path):

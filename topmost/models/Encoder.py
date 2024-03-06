@@ -21,9 +21,12 @@ class MLPEncoder(nn.Module):
         self.logvar_bn.weight.requires_grad = False
 
     def reparameterize(self, mu, logvar):
-        std = torch.exp(0.5 * logvar)
-        eps = torch.randn_like(std)
-        return eps.mul(std).add_(mu)
+        if self.training:
+            std = torch.exp(0.5 * logvar)
+            eps = torch.randn_like(std)
+            return mu + (eps * std)
+        else:
+            return mu
 
     def forward(self, x):
         e1 = F.softplus(self.fc11(x))
