@@ -27,7 +27,10 @@ class BasicTrainer:
         return optimizer
 
     def make_lr_scheduler(self, optimizer):
-        lr_scheduler = StepLR(optimizer, step_size=self.lr_step_size, gamma=0.5, verbose=False)
+        if self.lr_scheduler == "StepLR":
+            lr_scheduler = StepLR(optimizer, step_size=self.lr_step_size, gamma=0.5, verbose=False)
+        else:
+            raise NotImplementedError(self.lr_scheduler)
         return lr_scheduler
 
     def train(self):
@@ -90,6 +93,6 @@ class BasicTrainer:
         return top_words
 
     def export_theta(self):
-        train_theta = self.test(self.dataset_handler.train_bow)
-        test_theta = self.test(self.dataset_handler.test_bow)
+        train_theta = self.test(self.dataset_handler.train_data)
+        test_theta = self.test(self.dataset_handler.test_data)
         return train_theta, test_theta
