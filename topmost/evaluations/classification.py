@@ -19,7 +19,7 @@ def evaluate_classification(train_theta, test_theta, train_labels, test_labels, 
     return results
 
 
-def evaluate_crosslingual_classification(
+def crosslingual_classification(
     train_theta_en,
     train_theta_cn,
     test_theta_en,
@@ -45,7 +45,7 @@ def evaluate_crosslingual_classification(
     }
 
 
-def evaluate_hierarchical_classification(train_theta, test_theta, train_labels, test_labels, classifier='SVM', gamma='scale'):
+def hierarchical_classification(train_theta, test_theta, train_labels, test_labels, classifier='SVM', gamma='scale'):
     num_layer = len(train_theta)
     results = defaultdict(list)
 

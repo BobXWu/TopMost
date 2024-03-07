@@ -19,7 +19,7 @@ def compute_topic_diversity(top_words, _type="TD"):
     return TD
 
 
-def compute_multiaspect_topic_diversity(top_words, _type="TD"):
+def multiaspect_topic_diversity(top_words, _type="TD"):
     TD_list = list()
     for level_top_words in top_words:
         TD = compute_topic_diversity(level_top_words, _type)

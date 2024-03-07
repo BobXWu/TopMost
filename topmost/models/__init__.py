@@ -13,3 +13,4 @@ from .dynamic.DETM import DETM
 
 from .hierarchical.SawETM.SawETM import SawETM
 from .hierarchical.HyperMiner.HyperMiner import HyperMiner
+from .hierarchical.TraCo.TraCo import TraCo

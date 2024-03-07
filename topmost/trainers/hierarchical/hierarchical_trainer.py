@@ -98,16 +98,22 @@ class HierarchicalTrainer:
         beta_list = to_nparray(self.model.get_beta())
         return beta_list
 
-    def export_top_words(self, num_top_words=15):
+    def export_top_words(self, num_top_words=15, annotation=False):
         beta = self.export_beta()
         top_words_list = list()
+
         for layer in range(beta.shape[0]):
             print(f"======= Layer: {layer} number of topics: {beta[layer].shape[0]} =======")
             top_words = static_utils.print_topic_words(beta[layer], vocab=self.dataset_handler.vocab, num_top_words=num_top_words)
-            top_words_list.append(top_words)
+
+            if not annotation:
+                top_words_list.append(top_words)
+            else:
+                top_words_list.extend([f'L-{layer}_K-{k} {item}' for k, item in enumerate(top_words)])
+
         return top_words_list
 
     def export_theta(self):
-        train_theta = self.test(self.dataset_handler.train_bow)
-        test_theta = self.test(self.dataset_handler.test_bow)
+        train_theta = self.test(self.dataset_handler.train_data)
+        test_theta = self.test(self.dataset_handler.test_data)
         return train_theta, test_theta
