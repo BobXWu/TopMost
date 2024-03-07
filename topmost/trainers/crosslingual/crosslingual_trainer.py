@@ -1,15 +1,14 @@
-import numpy as np
 import torch
 from torch.optim.lr_scheduler import StepLR
 from collections import defaultdict
+import numpy as np
 from tqdm import tqdm
 from topmost.utils import static_utils
 
 
 class CrosslingualTrainer:
-    def __init__(self, model, dataset_handler, epochs=500, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125, log_interval=5):
+    def __init__(self, model, epochs=500, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125, log_interval=5):
         self.model = model
-        self.dataset_handler = dataset_handler
         self.epochs = epochs
         self.learning_rate = learning_rate
         self.batch_size = batch_size
@@ -28,14 +27,23 @@ class CrosslingualTrainer:
 
     def make_lr_scheduler(self, optimizer):
         if self.lr_scheduler == 'StepLR':
+            print("===>using lr_scheduler")
             lr_scheduler = StepLR(optimizer, step_size=self.lr_step_size, gamma=0.5, verbose=False)
         else:
             raise NotImplementedError(self.lr_scheduler)
 
         return lr_scheduler
 
-    def train(self):
-        data_size = len(self.dataset_handler.train_dataloader.dataset)
+    def fit_transform(self, dataset_handler, num_top_words=15, verbose=False):
+        self.train(dataset_handler, verbose)
+        top_words_en, top_words_cn = self.export_top_words(dataset_handler.vocab_en, dataset_handler.vocab_cn, num_top_words)
+        train_theta_en, train_theta_cn = self.test(dataset_handler.train_bow_en, dataset_handler.train_bow_cn)
+
+        return top_words_en, top_words_cn, train_theta_en, train_theta_cn
+
+
+    def train(self, dataset_handler, verbose=False):
+        data_size = len(dataset_handler.train_dataloader.dataset)
         optimizer = self.make_optimizer()
 
         if self.lr_scheduler:
@@ -47,7 +55,7 @@ class CrosslingualTrainer:
             loss_rst_dict = defaultdict(float)
 
             self.model.train()
-            for batch_data in self.dataset_handler.train_dataloader:
+            for batch_data in dataset_handler.train_dataloader:
                 batch_bow_en = batch_data['bow_en']
                 batch_bow_cn = batch_data['bow_cn']
                 params_list = [batch_bow_en, batch_bow_cn]
@@ -67,7 +75,7 @@ class CrosslingualTrainer:
             if self.lr_scheduler:
                 lr_scheduler.step()
 
-            if epoch % self.log_interval == 0:
+            if verbose and epoch % self.log_interval == 0:
                 output_log = f'Epoch: {epoch:03d}'
                 for key in loss_rst_dict:
                     output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
@@ -90,22 +98,25 @@ class CrosslingualTrainer:
     def test(self, bow_en, bow_cn):
         theta_en = self.get_theta(bow_en, lang='en')
         theta_cn = self.get_theta(bow_cn, lang='cn')
+
         return theta_en, theta_cn
 
     def export_beta(self):
         beta_en, beta_cn = self.model.get_beta()
         beta_en = beta_en.detach().cpu().numpy()
         beta_cn = beta_cn.detach().cpu().numpy()
+
         return beta_en, beta_cn
 
-    def export_top_words(self, num_top_words=15):
+    def export_top_words(self, vocab_en, vocab_cn, num_top_words=15):
         beta_en, beta_cn = self.export_beta()
-        top_words_en = static_utils.print_topic_words(beta_en, vocab=self.dataset_handler.vocab_en, num_top_words=num_top_words)
-        top_words_cn = static_utils.print_topic_words(beta_cn, vocab=self.dataset_handler.vocab_cn, num_top_words=num_top_words)
+        top_words_en = static_utils.print_topic_words(beta_en, vocab_en, num_top_words)
+        top_words_cn = static_utils.print_topic_words(beta_cn, vocab_cn, num_top_words)
 
         return top_words_en, top_words_cn
 
-    def export_theta(self):
-        train_theta_en, train_theta_cn = self.test(self.dataset_handler.train_bow_en, self.dataset_handler.train_bow_cn)
-        test_theta_en, test_theta_cn = self.test(self.dataset_handler.test_bow_en, self.dataset_handler.test_bow_cn)
+    def export_theta(self, dataset_handler):
+        train_theta_en, train_theta_cn = self.test(dataset_handler.train_bow_en, dataset_handler.train_bow_cn)
+        test_theta_en, test_theta_cn = self.test(dataset_handler.test_bow_en, dataset_handler.test_bow_cn)
+
         return train_theta_en, train_theta_cn, test_theta_en, test_theta_cn

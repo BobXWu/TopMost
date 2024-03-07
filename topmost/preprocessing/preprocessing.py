@@ -308,4 +308,3 @@ class Preprocessing:
         np.savetxt(f"{output_dir}/train_labels.txt", self.train_labels, fmt='%i')
         np.savetxt(f"{output_dir}/test_labels.txt", self.test_labels, fmt='%i')
         file_utils.save_text(self.vocab, f"{output_dir}/vocab.txt")
-

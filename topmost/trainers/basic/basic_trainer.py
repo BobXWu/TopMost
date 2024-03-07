@@ -1,15 +1,14 @@
 import numpy as np
+from tqdm import tqdm
 import torch
 from torch.optim.lr_scheduler import StepLR
 from collections import defaultdict
-from tqdm import tqdm
 from topmost.utils import static_utils
 
 
 class BasicTrainer:
-    def __init__(self, model, dataset_handler, epochs=200, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125, log_interval=5):
+    def __init__(self, model, epochs=200, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125, log_interval=5):
         self.model = model
-        self.dataset_handler = dataset_handler
         self.epochs = epochs
         self.learning_rate = learning_rate
         self.batch_size = batch_size
@@ -33,20 +32,27 @@ class BasicTrainer:
             raise NotImplementedError(self.lr_scheduler)
         return lr_scheduler
 
-    def train(self):
+    def fit_transform(self, dataset_handler, num_top_words=15, verbose=False):
+        self.train(dataset_handler, verbose)
+        top_words = self.export_top_words(dataset_handler.vocab, num_top_words)
+        train_theta = self.test(dataset_handler.train_data)
+
+        return top_words, train_theta
+
+    def train(self, dataset_handler, verbose=False):
         optimizer = self.make_optimizer()
 
         if self.lr_scheduler:
-            print("===>Warning: use lr_scheduler")
+            print("===>using lr_scheduler")
             lr_scheduler = self.make_lr_scheduler(optimizer)
 
-        data_size = len(self.dataset_handler.train_dataloader.dataset)
+        data_size = len(dataset_handler.train_dataloader.dataset)
 
         for epoch in tqdm(range(1, self.epochs + 1)):
             self.model.train()
             loss_rst_dict = defaultdict(float)
 
-            for batch_data in self.dataset_handler.train_dataloader:
+            for batch_data in dataset_handler.train_dataloader:
 
                 rst_dict = self.model(batch_data)
                 batch_loss = rst_dict['loss']
@@ -61,7 +67,7 @@ class BasicTrainer:
             if self.lr_scheduler:
                 lr_scheduler.step()
 
-            if epoch % self.log_interval == 0:
+            if verbose and epoch % self.log_interval == 0:
                 output_log = f'Epoch: {epoch:03d}'
                 for key in loss_rst_dict:
                     output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
@@ -87,12 +93,12 @@ class BasicTrainer:
         beta = self.model.get_beta().detach().cpu().numpy()
         return beta
 
-    def export_top_words(self, num_top_words=15):
+    def export_top_words(self, vocab, num_top_words=15):
         beta = self.export_beta()
-        top_words = static_utils.print_topic_words(beta, vocab=self.dataset_handler.vocab, num_top_words=num_top_words)
+        top_words = static_utils.print_topic_words(beta, vocab, num_top_words)
         return top_words
 
-    def export_theta(self):
-        train_theta = self.test(self.dataset_handler.train_data)
-        test_theta = self.test(self.dataset_handler.test_data)
+    def export_theta(self, dataset_handler):
+        train_theta = self.test(dataset_handler.train_data)
+        test_theta = self.test(dataset_handler.test_data)
         return train_theta, test_theta
