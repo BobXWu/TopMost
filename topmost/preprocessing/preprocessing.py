@@ -26,6 +26,8 @@ alphanum = re.compile('^[a-zA-Z0-9_]+$')
 
 
 def get_stopwords(stopwords):
+    if stopwords is None:
+        stopwords = []
     if isinstance(stopwords, list):
         stopword_set = stopwords
     elif isinstance(stopwords, str):
@@ -80,7 +82,7 @@ class Tokenizer:
         text = text.strip()
         return text
 
-    def tokenize(self, text, vocab=None):
+    def tokenize(self, text):
         text = self.clean_text(text, self.strip_html, self.lower)
         tokens = text.split()
 
@@ -102,12 +104,7 @@ class Tokenizer:
         # counts = Counter()
         # counts.update(unigrams)
 
-        if vocab is not None:
-            tokens = [token for token in unigrams if token in vocab]
-        else:
-            tokens = unigrams
-
-        return tokens
+        return unigrams
 
 
 def make_word_embeddings(vocab):
@@ -131,7 +128,7 @@ def make_word_embeddings(vocab):
 
 
 class Preprocessing:
-    def __init__(self, test_sample_size=None, test_p=0.2, stopwords="snowball", min_doc_count=0, max_doc_freq=1.0, keep_num=False, keep_alphanum=False, strip_html=False, no_lower=False, min_length=3, min_term=1, vocab_size=None, seed=42):
+    def __init__(self, tokenizer=None, test_sample_size=None, test_p=0.2, stopwords=None, min_doc_count=0, max_doc_freq=1.0, keep_num=False, keep_alphanum=False, strip_html=False, no_lower=False, min_length=3, min_term=1, vocab_size=None, seed=42):
         """
         Args:
             test_sample_size:
@@ -170,7 +167,10 @@ class Preprocessing:
         self.vocab_size = vocab_size
         self.seed = seed
 
-        self.tokenizer = Tokenizer(stopwords, keep_num, keep_alphanum, strip_html, no_lower, min_length)
+        if tokenizer is not None:
+            self.tokenizer = tokenizer
+        else:
+            self.tokenizer = Tokenizer(stopwords, keep_num, keep_alphanum, strip_html, no_lower, min_length).tokenize
 
     def parse(self, texts, vocab):
         if not isinstance(texts, list):
@@ -178,87 +178,98 @@ class Preprocessing:
 
         parsed_texts = list()
         for i, text in enumerate(tqdm(texts, desc="===>parse texts")):
-            tokens = tokens = self.tokenizer.tokenize(text, vocab=vocab)
+            tokens = self.tokenizer(text)
+            tokens = [t for t in tokens if t in vocab]
             parsed_texts.append(' '.join(tokens))
 
         vectorizer = CountVectorizer(vocabulary=vocab, tokenizer=lambda x: x.split())
-        bow_matrix = vectorizer.fit_transform(parsed_texts)
-        bow_matrix = bow_matrix.toarray()
-        return parsed_texts, bow_matrix
+        bow = vectorizer.fit_transform(parsed_texts)
+        bow = bow.toarray()
+        return parsed_texts, bow
 
-    def parse_dataset(self, dataset_dir, label_name):
-        np.random.seed(self.seed)
-
+    def preprocess_jsonlist(self, dataset_dir, label_name=None):
         train_items = file_utils.read_jsonlist(os.path.join(dataset_dir, 'train.jsonlist'))
         test_items = file_utils.read_jsonlist(os.path.join(dataset_dir, 'test.jsonlist'))
 
-        n_train = len(train_items)
-        n_test = len(test_items)
+        print(f"Found training documents {len(train_items)} testing documents {len(test_items)}")
 
-        print(f"Found training documents {n_train} testing documents {n_test}")
+        raw_train_texts = []
+        train_labels = []
+        raw_test_texts = []
+        test_labels = []
 
-        all_items = train_items + test_items
-        n_items = len(all_items)
+        for item in train_items:
+            raw_train_texts.append(item['text'])
 
-        if label_name is not None:
-            label_set = set()
-            for i, item in enumerate(all_items):
-                label_set.add(str(item[label_name]))
+            if label_name is not None:
+                train_labels.append(item[label_name])
+ 
+        for item in test_items:
+            raw_test_texts.append(item['text'])
 
-            label_list = list(label_set)
+            if label_name is not None:
+                test_labels.append(item[label_name])
+
+        rst = self.preprocess(raw_train_texts, train_labels, raw_test_texts, test_labels)
+
+        return rst
+
+    def convert_labels(self, train_labels, test_labels):
+        if train_labels is not None:
+            label_list = list(set(train_labels))
             label_list.sort()
             n_labels = len(label_list)
             label2id = dict(zip(label_list, range(n_labels)))
 
-            print("Found label %s with %d classes" % (label_name, n_labels))
             print("label2id: ", label2id)
+
+            train_labels = [label2id[label] for label in train_labels]
+
+            if test_labels is not None:
+                test_labels = [label2id[label] for label in test_labels]
+
+        return train_labels, test_labels
+
+    def preprocess(self, raw_train_texts, train_labels=None, raw_test_texts=None, test_labels=None):
+        np.random.seed(self.seed)
 
         train_texts = list()
         test_texts = list()
-        train_labels = list()
-        test_labels = list()
-
         word_counts = Counter()
         doc_counts_counter = Counter()
 
-        for i, item in enumerate(tqdm(all_items, desc="===>parse texts")):
-            text = item['text']
-            label = label2id[item[label_name]]
+        train_labels, test_labels = self.convert_labels(train_labels, test_labels)
 
-            # tokens = tokenize(text, strip_html=self.strip_html, lower=(not self.no_lower), keep_numbers=self.keep_num, keep_alphanum=self.keep_alphanum, min_length=self.min_length, stopwords=self.stopword_set)
-            tokens = self.tokenizer.tokenize(text)
+        for text in tqdm(raw_train_texts, desc="===>parse train texts"):
+            tokens = self.tokenizer(text)
             word_counts.update(tokens)
             doc_counts_counter.update(set(tokens))
             parsed_text = ' '.join(tokens)
-            # train_texts and test_texts have been parsed.
-            if i < n_train:
-                train_texts.append(parsed_text)
-                train_labels.append(label)
-            else:
+            train_texts.append(parsed_text)
+
+        if raw_test_texts:
+            for text in tqdm(raw_test_texts, desc="===>parse test texts"):
+                tokens = self.tokenizer(text)
+                word_counts.update(tokens)
+                doc_counts_counter.update(set(tokens))
+                parsed_text = ' '.join(tokens)
                 test_texts.append(parsed_text)
-                test_labels.append(label)
 
         words, doc_counts = zip(*doc_counts_counter.most_common())
-        doc_freqs = np.array(doc_counts) / float(n_items)
+        doc_freqs = np.array(doc_counts) / float(len(train_texts) + len(test_texts))
+
         vocab = [word for i, word in enumerate(words) if doc_counts[i] >= self.min_doc_count and doc_freqs[i] <= self.max_doc_freq]
 
         # filter vocabulary
-        if (self.vocab_size is not None) and (len(vocab) > self.vocab_size):
+        if self.vocab_size is not None:
             vocab = vocab[:self.vocab_size]
 
         vocab.sort()
 
-        print(f"Real vocab size: {len(vocab)}")
+        train_idx = [i for i, text in enumerate(train_texts) if len(text.split()) >= self.min_term]
 
-        print("===>convert to matrix...")
-        vectorizer = CountVectorizer(vocabulary=vocab, tokenizer=lambda x: x.split())
-        bow_matrix = vectorizer.fit_transform(train_texts + test_texts)
-
-        train_bow_matrix = bow_matrix[:len(train_texts)]
-        test_bow_matrix = bow_matrix[-len(test_texts):]
-
-        train_idx = np.where(train_bow_matrix.sum(axis=1) >= self.min_term)[0]
-        test_idx = np.where(test_bow_matrix.sum(axis=1) >= self.min_term)[0]
+        if raw_test_texts is not None:
+            test_idx = [i for i, text in enumerate(test_texts) if len(text.split()) >= self.min_term]
 
         # randomly sample
         if self.test_sample_size:
@@ -275,36 +286,50 @@ class Preprocessing:
             train_idx = train_idx[np.sort(np.random.choice(train_num, train_sample_size, replace=False))]
             test_idx = test_idx[np.sort(np.random.choice(test_num, test_sample_size, replace=False))]
 
-            print("===>sampled train size: ", len(train_idx))
-            print("===>sampled test size: ", len(test_idx))
+            print(f"===>sampled train size: {len(train_idx)}")
+            print(f"===>sampled train size: {len(test_idx)}")
 
-        self.train_bow_matrix = train_bow_matrix[train_idx]
-        self.test_bow_matrix = test_bow_matrix[test_idx]
-        self.train_labels = np.asarray(train_labels)[train_idx]
-        self.test_labels = np.asarray(test_labels)[test_idx]
-        self.vocab = vocab
+        train_texts, train_bow = self.parse(np.asarray(train_texts)[train_idx].tolist(), vocab)
 
-        self.train_texts, _ = self.parse(np.asarray(train_texts)[train_idx].tolist(), vocab)
-        self.test_texts, _ = self.parse(np.asarray(test_texts)[test_idx].tolist(), vocab)
-        self.word_embeddings = make_word_embeddings(vocab)
+        rst = {
+            'vocab': vocab,
+            'train_bow': train_bow,
+            'train_texts': train_texts,
+            'word_embeddings': make_word_embeddings(vocab)
+        }
 
-        print("Real training size: ", len(self.train_texts))
-        print("Real testing size: ", len(self.test_texts))
-        print(f"average length of training set: {self.train_bow_matrix.sum(1).sum() / len(self.train_texts):.3f}")
-        print(f"average length of testing set: {self.test_bow_matrix.sum(1).sum() / len(self.test_texts):.3f}")
+        if train_labels is not None:
+            rst['train_labels'] = np.asarray(train_labels)[train_idx]
 
-    def save(self, output_dir):
-        print("Real output_dir is ", output_dir)
+        print(f"Real vocab size: {len(vocab)}")
+        print(f"Real training size: {len(train_texts)} \t avg length: {rst['train_bow'].sum() / len(train_texts):.3f}")
+
+        if raw_test_texts is not None:
+            rst['test_texts'], rst['test_bow'] = self.parse(np.asarray(test_texts)[test_idx].tolist(), vocab)
+
+            if test_labels is not None:
+                rst['test_labels'] = np.asarray(test_labels)[test_idx]
+
+            print(f"Real testing size: {len(rst['test_texts'])} \t avg length: {rst['test_bow'].sum() / len(rst['test_texts']):.3f}")
+
+        return rst
+
+    def save(self, output_dir, vocab, train_texts, train_bow, word_embeddings, train_labels=None, test_texts=None, test_bow=None, test_labels=None):
         file_utils.make_dir(output_dir)
 
-        scipy.sparse.save_npz(f"{output_dir}/train_bow.npz", self.train_bow_matrix)
-        scipy.sparse.save_npz(f"{output_dir}/test_bow.npz", self.test_bow_matrix)
+        file_utils.save_text(vocab, f"{output_dir}/vocab.txt")
+        file_utils.save_text(train_texts, f"{output_dir}/train_texts.txt")
+        scipy.sparse.save_npz(f"{output_dir}/train_bow.npz", scipy.sparse.csr_matrix(train_bow))
+        scipy.sparse.save_npz(f"{output_dir}/word_embeddings.npz", word_embeddings)
 
-        scipy.sparse.save_npz(f"{output_dir}/word_embeddings.npz", self.word_embeddings)
+        if train_labels is not None:
+            np.savetxt(f"{output_dir}/train_labels.txt", train_labels, fmt='%i')
 
-        file_utils.save_text(self.train_texts, f"{output_dir}/train_texts.txt")
-        file_utils.save_text(self.test_texts, f"{output_dir}/test_texts.txt")
+        if test_bow is not None:
+            scipy.sparse.save_npz(f"{output_dir}/test_bow.npz", scipy.sparse.csr_matrix(test_bow))
 
-        np.savetxt(f"{output_dir}/train_labels.txt", self.train_labels, fmt='%i')
-        np.savetxt(f"{output_dir}/test_labels.txt", self.test_labels, fmt='%i')
-        file_utils.save_text(self.vocab, f"{output_dir}/vocab.txt")
+        if test_texts is not None:
+            file_utils.save_text(test_texts, f"{output_dir}/test_texts.txt")
+
+            if test_labels is not None:
+                np.savetxt(f"{output_dir}/test_labels.txt", test_labels, fmt='%i')
