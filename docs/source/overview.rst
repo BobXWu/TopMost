@@ -1,12 +1,11 @@
-
 ============
 Overview
 ============
 
 TopMost offers the following topic modeling scenarios with models, evaluation metrics, and datasets:
 
-.. image:: _static/architecture.svg
-    :width: 500
+.. image:: docs/source/_static/architecture.svg
+    :width: 390
     :align: center
 
 +------------------------------+---------------+--------------------------------------------+-----------------+
@@ -27,7 +26,8 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 | | Hierarchical               | | SawETM_     | | TD over levels                           | | NeurIPS       |
 | | Topic Modeling             | | HyperMiner_ | | Clustering over levels                   | | ACL           |
 |                              | | ProGBN_     | | Classification over levels               | | NYT           |
-|                              |               |                                            | | Wikitext-103  |
+|                              | | TraCo_      |                                            | | Wikitext-103  |
+|                              |               |                                            |                 |
 +------------------------------+---------------+--------------------------------------------+-----------------+
 |                              |               | | TC over time slices                      |                 |
 | | Dynamic                    | | DTM_        | | TD over time slices                      | | NeurIPS       |
@@ -54,9 +54,10 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 .. _SawETM: http://proceedings.mlr.press/v139/duan21b/duan21b.pdf
 .. _HyperMiner: https://arxiv.org/pdf/2210.10625.pdf
 .. _ProGBN: https://proceedings.mlr.press/v202/duan23c/duan23c.pdf
+.. _TraCo: https://arxiv.org/pdf/2401.14113.pdf
 
 .. _DTM: https://mimno.infosci.cornell.edu/info6150/readings/dynamic_topic_models.pdf
-.. _DETM: https://arxiv.org/abs/2012.01524
+.. _DETM: https://arxiv.org/abs/1907.05545
 
 .. _NMTM: https://bobxwu.github.io/files/pub/NLPCC2020_Neural_Multilingual_Topic_Model.pdf
 .. _InfoCTM: https://arxiv.org/abs/2304.03544

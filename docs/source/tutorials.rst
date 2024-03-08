@@ -1,7 +1,10 @@
-
 ============
 Tutorials
 ============
+
+.. |github0| image:: https://img.shields.io/badge/Open%20in%20Github-%20?logo=github&color=grey
+    :target: https://github.com/BobXWu/TopMost/blob/master/tutorials/tutorial_quickstart.ipynb
+    :alt: Open In GitHub
 
 .. |github1| image:: https://img.shields.io/badge/Open%20in%20Github-%20?logo=github&color=grey
     :target: https://github.com/BobXWu/TopMost/blob/master/tutorials/tutorial_preprocessing_datasets.ipynb
@@ -30,6 +33,8 @@ We provide tutorials for different usages:
 +--------------------------------------------------------------------------------+-------------------+
 | Name                                                                           | Link              |
 +================================================================================+===================+
+| Quickstart                                                                     | |github0|         |
++--------------------------------------------------------------------------------+-------------------+
 | How to preprocess datasets                                                     | |github1|         |
 +--------------------------------------------------------------------------------+-------------------+
 | How to train and evaluate a basic topic model                                  | |github2|         |

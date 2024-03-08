@@ -12,6 +12,14 @@
         :target: https://pepy.tech/project/topmost
         :alt: Downloads
 
+.. image:: https://img.shields.io/pypi/v/topmost
+        :target: https://pypi.org/project/topmost
+        :alt: PyPi
+
+.. image:: https://readthedocs.org/projects/topmost/badge/?version=latest
+    :target: https://topmost.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 .. image:: https://img.shields.io/github/license/bobxwu/topmost
         :target: https://www.apache.org/licenses/LICENSE-2.0/
         :alt: License
@@ -19,6 +27,10 @@
 .. image:: https://img.shields.io/github/contributors/bobxwu/topmost
         :target: https://github.com/bobxwu/topmost/graphs/contributors/
         :alt: Contributors
+
+.. image:: https://img.shields.io/badge/arXiv-2309.06908-<COLOR>.svg
+        :target: https://arxiv.org/pdf/2309.06908.pdf
+        :alt: arXiv
 
 
 TopMost provides complete lifecycles of topic modeling, including datasets, preprocessing, models, training, and evaluations. It covers the most popular topic modeling scenarios, like basic, dynamic, hierarchical, and cross-lingual topic modeling.
@@ -355,9 +367,36 @@ Contributors
 
 
 =================
+How to cite our work
+=================
+If you want to use our toolkit, please cite as
+
+::
+
+    @article{wu2023topmost,
+    title={Towards the TopMost: A Topic Modeling System Toolkit},
+    author={Wu, Xiaobao and Pan, Fengjun and Luu, Anh Tuan},
+    journal={arXiv preprint arXiv:2309.06908},
+    year={2023}
+    }
+
+    @article{wu2023survey,
+        title={A Survey on Neural Topic Models: Methods, Applications, and Challenges},
+        author={Wu, Xiaobao and Nguyen, Thong and Luu, Anh Tuan},
+        journal={Artificial Intelligence Review},
+        url={https://doi.org/10.1007/s10462-023-10661-7},
+        year={2024},
+        publisher={Springer}
+    }
+
+
+=================
 Acknowledgments
 =================
 
 - If you want to add any models to this package, we welcome your pull requests.
 - If you encounter any problem, please either directly contact `Xiaobao Wu <xiaobao002@e.ntu.edu.sg>`_ or leave an issue in the GitHub repo.
 - Icon by `Flat-icons-com <https://www.freepik.com/icon/top_671169>`_.
+
+
+

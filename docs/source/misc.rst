@@ -1,4 +1,3 @@
-
 ============
 Notice
 ============
@@ -19,7 +18,7 @@ This library includes some datasets for demonstration. If you are a dataset owne
 
 
 ============
-Contributors
+Authors
 ============
 
 |xiaobao-figure| `Xiaobao Wu <https://bobxwu.github.io>`_
@@ -35,10 +34,47 @@ Contributors
     :width: 50
 
 
+
+============
+Contributors
+============
+
+
+.. image:: https://contrib.rocks/image?repo=bobxwu/topmost
+        :alt: Contributors
+
+
+
+=================
+How to cite our work
+=================
+If you want to use our toolkit, please cite as
+
+::
+
+    @article{wu2023topmost,
+    title={Towards the TopMost: A Topic Modeling System Toolkit},
+    author={Wu, Xiaobao and Pan, Fengjun and Luu, Anh Tuan},
+    journal={arXiv preprint arXiv:2309.06908},
+    year={2023}
+    }
+
+    @article{wu2023survey,
+        title={A Survey on Neural Topic Models: Methods, Applications, and Challenges},
+        author={Wu, Xiaobao and Nguyen, Thong and Luu, Anh Tuan},
+        journal={Artificial Intelligence Review},
+        url={https://doi.org/10.1007/s10462-023-10661-7},
+        year={2024},
+        publisher={Springer}
+    }
+
+
+
+
 =================
 Acknowledgments
 =================
 
-- Icon by `Flat-icons-com <https://www.freepik.com/icon/top_671169>`_.
 - If you want to add any models to this package, we welcome your pull requests.
 - If you encounter any problem, please either directly contact `Xiaobao Wu <xiaobao002@e.ntu.edu.sg>`_ or leave an issue in the GitHub repo.
+- Icon by `Flat-icons-com <https://www.freepik.com/icon/top_671169>`_.
