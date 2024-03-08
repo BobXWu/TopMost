@@ -127,14 +127,13 @@ Install topmost with ``pip`` as
 
 
 Discover topics from your own datasets
------------------------------------
+-------------------------------------------
 
 We can get the top words of discovered topics, ``topic_top_words``` and the topic distributions of documents, ``doc_topic_dist``.
 The preprocessing steps are configurable. See our documentations.
 
 .. code-block:: python
 
-    import torch
     import topmost
     from topmost.preprocessing import Preprocessing
 
@@ -343,9 +342,13 @@ This library includes some datasets for demonstration. If you are a dataset owne
 Authors
 ============
 
-|xiaobao-figure| `Xiaobao Wu <https://bobxwu.github.io>`_
-
-|fengjun-figure| `Fengjun Pan <https://github.com/panFJCharlotte98>`_
++----------------------------------------------------------+
+| |xiaobao-figure|                                         |
+| `Xiaobao Wu <https://bobxwu.github.io>`__                |
++----------------------------------------------------------+
+| |fengjun-figure|                                         |
+| `Fengjun Pan <https://github.com/panFJCharlotte98>`__    |
++----------------------------------------------------------+
 
 .. |xiaobao-figure| image:: https://bobxwu.github.io/img/figure.jpg 
    :target: https://bobxwu.github.io
@@ -356,19 +359,19 @@ Authors
     :width: 50
 
 
-
-============
+==============
 Contributors
-============
+==============
 
 
 .. image:: https://contrib.rocks/image?repo=bobxwu/topmost
         :alt: Contributors
 
 
-=================
+======================
 How to cite our work
-=================
+======================
+
 If you want to use our toolkit, please cite as
 
 ::
@@ -397,6 +400,4 @@ Acknowledgments
 - If you want to add any models to this package, we welcome your pull requests.
 - If you encounter any problem, please either directly contact `Xiaobao Wu <xiaobao002@e.ntu.edu.sg>`_ or leave an issue in the GitHub repo.
 - Icon by `Flat-icons-com <https://www.freepik.com/icon/top_671169>`_.
-
-
 

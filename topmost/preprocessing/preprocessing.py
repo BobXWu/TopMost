@@ -112,12 +112,13 @@ def make_word_embeddings(vocab):
     word_embeddings = np.zeros((len(vocab), glove_vectors.vectors.shape[1]))
 
     num_found = 0
-    for i, word in enumerate(tqdm(vocab, desc="===>making word embeddings")):
-        try:
-            key_word_list = glove_vectors.index_to_key
-        except:
-            key_word_list = glove_vectors.index2word
 
+    try:
+        key_word_list = glove_vectors.index_to_key
+    except:
+        key_word_list = glove_vectors.index2word
+
+    for i, word in enumerate(tqdm(vocab, desc="===>making word embeddings")):
         if word in key_word_list:
             word_embeddings[i] = glove_vectors[word]
             num_found += 1
