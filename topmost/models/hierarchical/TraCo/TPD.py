@@ -12,7 +12,7 @@ class TPD(nn.Module):
         self.stopThr = stopThr
         self.epsilon = 1e-16
 
-    def forward(self, topic_embeddings_list, weight_loss_TPD):
+    def forward(self, topic_embeddings_list, weight_loss_TPD=20.0):
         all_loss_TPD = 0.
         transp_list = list()
 

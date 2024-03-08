@@ -1,5 +1,9 @@
 import pytest
 import numpy as np
+
+import sys
+sys.path.append('../')
+
 from topmost.data import download_dataset
 from topmost.data import BasicDatasetHandler
 

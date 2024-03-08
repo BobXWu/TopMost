@@ -1,4 +1,8 @@
 import pytest
+
+import sys
+sys.path.append('../')
+
 import topmost
 from topmost.data import download_dataset
 from topmost.data import CrosslingualDatasetHandler
@@ -12,13 +16,13 @@ def cache_path():
 
 def crosslingual_model_test(model, dataset, num_topics):
 
-    trainer = CrosslingualTrainer(model, dataset)
+    trainer = CrosslingualTrainer(model)
 
     beta_en, beta_cn = trainer.export_beta()
     assert beta_en.shape == beta_cn.shape
     assert beta_en.shape == (num_topics, dataset.vocab_size_en)
 
-    train_theta_en, train_theta_cn, test_theta_en, test_theta_cn = trainer.export_theta()
+    train_theta_en, train_theta_cn, test_theta_en, test_theta_cn = trainer.export_theta(dataset)
     assert train_theta_en.shape == (len(dataset.train_texts_en), num_topics)
     assert test_theta_en.shape == (len(dataset.test_texts_en), num_topics)
     assert train_theta_cn.shape == (len(dataset.train_texts_cn), num_topics)

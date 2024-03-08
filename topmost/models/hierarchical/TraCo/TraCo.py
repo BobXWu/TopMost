@@ -37,6 +37,8 @@ class TraCo(nn.Module):
         self.CDDecoder = CDDecoder(self.num_layers, vocab_size, bias_p, bias_topk)
         self.encoder = MLPEncoder(vocab_size, num_topics_list[-1], en_units, dropout)
 
+        _, self.transp_list = self.TPD(self.topic_embeddings_list)
+
     def get_beta(self):
         beta_list = list()
         for layer_id, num_topic in enumerate(self.num_topics_list):

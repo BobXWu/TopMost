@@ -1,5 +1,8 @@
 import pytest
-import numpy as np
+
+import sys
+sys.path.append('../')
+
 import topmost
 from topmost.data import download_dataset
 from topmost.data import BasicDatasetHandler, DynamicDatasetHandler
@@ -19,9 +22,9 @@ def test_basic_evaluations(cache_path):
     num_topics = 50
 
     model = ETM(num_topics=num_topics, vocab_size=dataset.vocab_size)
-    trainer = BasicTrainer(model, dataset)
+    trainer = BasicTrainer(model)
 
-    top_words = trainer.export_top_words()
+    top_words = trainer.export_top_words(dataset.vocab)
     TD = topmost.evaluations.compute_topic_diversity(top_words)
     TC = topmost.evaluations.compute_topic_coherence(dataset.train_texts, dataset.vocab, top_words)
     print("TD: ", TD)
@@ -35,10 +38,10 @@ def test_dynamic_evaluations(cache_path):
     num_topics = 50
 
     model = DETM(num_times=dataset.num_times, train_size=dataset.train_size, num_topics=num_topics, vocab_size=dataset.vocab_size, train_time_wordfreq=dataset.train_time_wordfreq)
-    trainer = DynamicTrainer(model, dataset)
+    trainer = DynamicTrainer(model)
 
-    top_words = trainer.export_top_words()
-    TD = topmost.evaluations.compute_multiaspect_topic_diversity(top_words)
+    top_words = trainer.export_top_words(dataset.vocab)
+    TD = topmost.evaluations.multiaspect_topic_diversity(top_words)
     TC = topmost.evaluations.compute_dynamic_TC(dataset.train_texts, dataset.train_times, dataset.vocab, top_words)
     print("TD: ", TD)
     print("TC: ", TC)

@@ -1,4 +1,8 @@
 import pytest
+
+import sys
+sys.path.append('../')
+
 import topmost
 from topmost.data import download_dataset
 from topmost.data import BasicDatasetHandler
@@ -12,7 +16,7 @@ def cache_path():
 
 def hierarchical_model_test(model_module, dataset, num_topics_list):
     model = model_module(num_topics_list=num_topics_list, vocab_size=dataset.vocab_size)
-    trainer = HierarchicalTrainer(model, dataset)
+    trainer = HierarchicalTrainer(model)
 
     beta = trainer.export_beta()
     assert len(beta) == len(num_topics_list)
@@ -20,7 +24,7 @@ def hierarchical_model_test(model_module, dataset, num_topics_list):
     for i, layer_beta in enumerate(beta):
         assert layer_beta.shape == (num_topics_list[i], dataset.vocab_size)
 
-    train_theta, test_theta = trainer.export_theta()
+    train_theta, test_theta = trainer.export_theta(dataset)
     assert len(train_theta) == len(num_topics_list)
     assert len(test_theta) == len(num_topics_list)
 
@@ -40,6 +44,7 @@ def test_models(cache_path):
     model_info = [
         topmost.models.SawETM,
         topmost.models.HyperMiner,
+        topmost.models.TraCo,
     ]
 
     for model_module in model_info:

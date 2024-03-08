@@ -1,5 +1,8 @@
 import pytest
-import numpy as np
+
+import sys
+sys.path.append('../')
+
 import topmost
 from topmost.data import download_dataset
 from topmost.data import BasicDatasetHandler
@@ -15,7 +18,7 @@ def basic_model_test(model_module, dataset, num_topics):
     model = model_module(num_topics=num_topics, vocab_size=dataset.vocab_size)
     trainer = BasicTrainer(model, dataset)
     assert trainer.export_beta().shape == (num_topics, dataset.vocab_size)
-    train_theta, test_theta = trainer.export_theta()
+    train_theta, test_theta = trainer.export_theta(dataset)
     assert train_theta.shape == (len(dataset.train_texts), num_topics)
     assert test_theta.shape == (len(dataset.test_texts), num_topics)
 
