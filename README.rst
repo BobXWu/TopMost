@@ -4,14 +4,6 @@
 .. |topmost-logo| image:: docs/source/_static/topmost-logo.png
     :width: 38
 
-.. image:: https://img.shields.io/github/license/bobxwu/topmost
-        :target: https://www.apache.org/licenses/LICENSE-2.0/
-        :alt: License
-
-.. image:: https://img.shields.io/github/contributors/bobxwu/topmost
-        :target: https://github.com/bobxwu/topmost/graphs/contributors/
-        :alt: Contributors
-
 .. image:: https://img.shields.io/github/stars/bobxwu/topmost?logo=github
         :target: https://github.com/bobxwu/topmost/stargazers
         :alt: Github Stars
@@ -20,15 +12,24 @@
         :target: https://pepy.tech/project/topmost
         :alt: Downloads
 
+.. image:: https://img.shields.io/github/license/bobxwu/topmost
+        :target: https://www.apache.org/licenses/LICENSE-2.0/
+        :alt: License
+
+.. image:: https://img.shields.io/github/contributors/bobxwu/topmost
+        :target: https://github.com/bobxwu/topmost/graphs/contributors/
+        :alt: Contributors
 
 
-TopMost provides complete lifecycles of topic modeling, including dataset preprocessing, model training, testing, and evaluations. It covers the most popular topic modeling scenarios, like basic, dynamic, hierarchical, and cross-lingual topic modeling.
+TopMost provides complete lifecycles of topic modeling, including datasets, preprocessing, models, training, and evaluations. It covers the most popular topic modeling scenarios, like basic, dynamic, hierarchical, and cross-lingual topic modeling.
+
 
 | This is our demo paper `Towards the TopMost: A Topic Modeling System Toolkit <https://arxiv.org/pdf/2309.06908.pdf>`_.
-| This is our survey paper on neural topic models: `A Survey on Neural Topic Models: Methods, Applications, and Challenges <https://assets.researchsquare.com/files/rs-3049182/v1_covered_557a6d7a-c326-45c0-98e2-028fb25af7ba.pdf?c=1686720142>`_.
+| This is our survey paper on neural topic models: `A Survey on Neural Topic Models: Methods, Applications, and Challenges <https://arxiv.org/pdf/2401.15351.pdf>`_.
 
+==================
 
-.. contents:: Table of Contents 
+.. contents:: **Table of Contents**
    :depth: 2
 
 
@@ -40,7 +41,7 @@ Overview
 TopMost offers the following topic modeling scenarios with models, evaluation metrics, and datasets:
 
 .. image:: docs/source/_static/architecture.svg
-    :width: 500
+    :width: 390
     :align: center
 
 +------------------------------+---------------+--------------------------------------------+-----------------+
@@ -61,7 +62,8 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 | | Hierarchical               | | SawETM_     | | TD over levels                           | | NeurIPS       |
 | | Topic Modeling             | | HyperMiner_ | | Clustering over levels                   | | ACL           |
 |                              | | ProGBN_     | | Classification over levels               | | NYT           |
-|                              |               |                                            | | Wikitext-103  |
+|                              | | TraCo_      |                                            | | Wikitext-103  |
+|                              |               |                                            |                 |
 +------------------------------+---------------+--------------------------------------------+-----------------+
 |                              |               | | TC over time slices                      |                 |
 | | Dynamic                    | | DTM_        | | TD over time slices                      | | NeurIPS       |
@@ -88,9 +90,10 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 .. _SawETM: http://proceedings.mlr.press/v139/duan21b/duan21b.pdf
 .. _HyperMiner: https://arxiv.org/pdf/2210.10625.pdf
 .. _ProGBN: https://proceedings.mlr.press/v202/duan23c/duan23c.pdf
+.. _TraCo: https://arxiv.org/pdf/2401.14113.pdf
 
 .. _DTM: https://mimno.infosci.cornell.edu/info6150/readings/dynamic_topic_models.pdf
-.. _DETM: https://arxiv.org/abs/2012.01524
+.. _DETM: https://arxiv.org/abs/1907.05545
 
 .. _NMTM: https://bobxwu.github.io/files/pub/NLPCC2020_Neural_Multilingual_Topic_Model.pdf
 .. _InfoCTM: https://arxiv.org/abs/2304.03544
@@ -101,7 +104,7 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 Quick Start
 ============
 
-Install
+Install TopMost
 -----------------
 
 Install topmost with ``pip`` as 
@@ -111,16 +114,51 @@ Install topmost with ``pip`` as
     $ pip install topmost
 
 
+Discover topics from your own datasets
+-----------------------------------
+
+We can get the top words of discovered topics, ``topic_top_words``` and the topic distributions of documents, ``doc_topic_dist``.
+The preprocessing steps are configurable. See our documentations.
+
+.. code-block:: python
+
+    import torch
+    import topmost
+    from topmost.preprocessing import Preprocessing
+
+    # Your own documents
+    docs = [
+        "This is a document about space, including words like space, satellite, launch, orbit.",
+        "This is a document about Microsoft Windows, including words like windows, files, dos.",
+        # more documents...
+    ]
+
+    device = 'cuda' # or 'cpu'
+    preprocessing = Preprocessing()
+    dataset = topmost.data.RawDatasetHandler(docs, preprocessing, device=device, as_tensor=True)
+
+    model = topmost.models.ProdLDA(dataset.vocab_size, num_topics=2)
+    model = model.to(device)
+
+    trainer = topmost.trainers.BasicTrainer(model)
+
+    topic_top_words, doc_topic_dist = trainer.fit_transform(dataset, num_top_words=15, verbose=False)
+
+
+
+
+============
+Usage
+============
+
 Download a preprocessed dataset
 -----------------------------------
-Download a preprocessed dataset from our Github repo:
 
 .. code-block:: python
 
     import topmost
     from topmost.data import download_dataset
 
-    dataset_dir = "./datasets/20NG"
     download_dataset('20NG', cache_path='./datasets')
 
 
@@ -132,16 +170,16 @@ Train a model
     device = "cuda" # or "cpu"
 
     # load a preprocessed dataset
-    dataset = topmost.data.BasicDatasetHandler(dataset_dir, device=device, read_labels=True, as_tensor=True)
+    dataset = topmost.data.BasicDatasetHandler("./datasets/20NG", device=device, read_labels=True, as_tensor=True)
     # create a model
-    model = topmost.models.ETM(vocab_size=dataset.vocab_size, pretrained_WE=dataset.pretrained_WE)
+    model = topmost.models.ProdLDA(dataset.vocab_size)
     model = model.to(device)
 
     # create a trainer
-    trainer = topmost.trainers.BasicTrainer(model, dataset)
+    trainer = topmost.trainers.BasicTrainer(model)
 
     # train the model
-    trainer.train()
+    trainer.train(dataset)
 
 
 Evaluate
@@ -149,32 +187,29 @@ Evaluate
 
 .. code-block:: python
 
-    # evaluate
     # get theta (doc-topic distributions)
-    train_theta, test_theta = trainer.export_theta()
+    train_theta, test_theta = trainer.export_theta(dataset)
     # get top words of topics
-    top_words = trainer.export_top_words()
+    topic_top_words = trainer.export_top_words(dataset.vocab)
 
     # evaluate topic diversity
-    TD = topmost.evaluations.compute_topic_diversity(top_words, _type="TD")
-    print(f"TD: {TD:.5f}")
+    TD = topmost.evaluations.compute_topic_diversity(top_words)
 
     # evaluate clustering
-    results = topmost.evaluations.evaluate_clustering(test_theta, dataset.test_labels)
-    print(results)
+    clustering_results = topmost.evaluations.evaluate_clustering(test_theta, dataset.test_labels)
 
     # evaluate classification
-    results = topmost.evaluations.evaluate_classification(train_theta, test_theta, dataset.train_labels, dataset.test_labels)
-    print(results)
+    classification_results = topmost.evaluations.evaluate_classification(train_theta, test_theta, dataset.train_labels, dataset.test_labels)
 
 
-Test new documents (Optional)
+
+Test new documents
 -----------------------------------
 
 .. code-block:: python
 
-    # test new documents
     import torch
+    from topmost.preprocessing import Preprocessing
 
     new_docs = [
         "This is a new document about space, including words like space, satellite, launch, orbit.",
@@ -182,7 +217,7 @@ Test new documents (Optional)
     ]
 
     parsed_new_docs, new_bow = preprocessing.parse(new_docs, vocab=dataset.vocab)
-    new_theta = runner.test(torch.as_tensor(new_bow, device=device).float())
+    new_doc_topic_dist = trainer.test(torch.as_tensor(new_bow, device=device).float())
 
 
 
@@ -226,6 +261,10 @@ Then install the TopMost by
 Tutorials
 ============
 
+.. |github0| image:: https://img.shields.io/badge/Open%20in%20Github-%20?logo=github&color=grey
+    :target: https://github.com/BobXWu/TopMost/blob/master/tutorials/tutorial_quickstart.ipynb
+    :alt: Open In GitHub
+
 .. |github1| image:: https://img.shields.io/badge/Open%20in%20Github-%20?logo=github&color=grey
     :target: https://github.com/BobXWu/TopMost/blob/master/tutorials/tutorial_preprocessing_datasets.ipynb
     :alt: Open In GitHub
@@ -253,6 +292,8 @@ We provide tutorials for different usages:
 +--------------------------------------------------------------------------------+-------------------+
 | Name                                                                           | Link              |
 +================================================================================+===================+
+| Quickstart                                                                     | |github0|         |
++--------------------------------------------------------------------------------+-------------------+
 | How to preprocess datasets                                                     | |github1|         |
 +--------------------------------------------------------------------------------+-------------------+
 | How to train and evaluate a basic topic model                                  | |github2|         |
@@ -287,7 +328,7 @@ This library includes some datasets for demonstration. If you are a dataset owne
 
 
 ============
-Contributors
+Authors
 ============
 
 |xiaobao-figure| `Xiaobao Wu <https://bobxwu.github.io>`_
@@ -303,10 +344,20 @@ Contributors
     :width: 50
 
 
+
+============
+Contributors
+============
+
+
+.. image:: https://contrib.rocks/image?repo=bobxwu/topmost
+        :alt: Contributors
+
+
 =================
 Acknowledgments
 =================
 
-- Icon by `Flat-icons-com <https://www.freepik.com/icon/top_671169>`_.
 - If you want to add any models to this package, we welcome your pull requests.
 - If you encounter any problem, please either directly contact `Xiaobao Wu <xiaobao002@e.ntu.edu.sg>`_ or leave an issue in the GitHub repo.
+- Icon by `Flat-icons-com <https://www.freepik.com/icon/top_671169>`_.
