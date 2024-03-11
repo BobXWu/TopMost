@@ -1,15 +1,4 @@
 ============
-Notice
-============
-
-Differences from original implementations
--------------------------------------------
-
- 1. Oringal implementations may use different optimizer settings. For simplicity and brevity, our package by default uses the same setting for different models.
-
-
-
-============
 Disclaimer
 ============
 
@@ -53,10 +42,10 @@ If you want to use our toolkit, please cite as
 ::
 
     @article{wu2023topmost,
-    title={Towards the TopMost: A Topic Modeling System Toolkit},
-    author={Wu, Xiaobao and Pan, Fengjun and Luu, Anh Tuan},
-    journal={arXiv preprint arXiv:2309.06908},
-    year={2023}
+        title={Towards the TopMost: A Topic Modeling System Toolkit},
+        author={Wu, Xiaobao and Pan, Fengjun and Luu, Anh Tuan},
+        journal={arXiv preprint arXiv:2309.06908},
+        year={2023}
     }
 
     @article{wu2023survey,
