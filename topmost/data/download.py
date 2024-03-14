@@ -6,7 +6,12 @@ from torchvision.datasets.utils import download_url
 def download_dataset(dataset_name, cache_path="~/.topmost"):
     cache_path = os.path.expanduser(cache_path)
     raw_filename = f'{dataset_name}.zip'
-    zipped_dataset_url = f"https://raw.githubusercontent.com/BobXWu/TopMost/master/data/{raw_filename}"
+
+    if dataset_name in ['Wikitext-103']:
+        # download from Git LFS.
+        zipped_dataset_url = f"https://media.githubusercontent.com/media/BobXWu/TopMost/main/data/{raw_filename}"
+    else:
+        zipped_dataset_url = f"https://raw.githubusercontent.com/BobXWu/TopMost/master/data/{raw_filename}"
 
     print(zipped_dataset_url)
 
