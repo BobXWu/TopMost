@@ -2,12 +2,11 @@ from bertopic import BERTopic
 
 
 class BERTopicTrainer:
-    def __init__(self, dataset, num_topics=50, num_top_words=15):
+    def __init__(self, num_topics=50, num_top_words=15):
         self.model = BERTopic(nr_topics=num_topics, top_n_words=num_top_words)
-        self.dataset = dataset
 
-    def train(self):
-        self.model.fit_transform(self.dataset.train_texts)
+    def train(self, dataset):
+        self.model.fit_transform(dataset.train_texts)
 
     def test(self, texts):
         theta, _ = self.model.approximate_distribution(texts)
@@ -24,7 +23,7 @@ class BERTopicTrainer:
             top_words.append(' '.join([x[0] for x in item]))
         return top_words
 
-    def export_theta(self):
-        train_theta, _ = self.test(self.dataset.train_texts)
-        test_theta, _ = self.test(self.dataset.test_texts)
+    def export_theta(self, dataset):
+        train_theta = self.test(dataset.train_texts)
+        test_theta = self.test(dataset.test_texts)
         return train_theta, test_theta
