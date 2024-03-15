@@ -67,7 +67,7 @@ class BasicDatasetHandler:
             self.test_data = torch.from_numpy(self.test_data).to(device)
 
             self.train_dataloader = DataLoader(self.train_data, batch_size=batch_size, shuffle=True)
-            self.test_dataloader = DataLoader(self.train_data, batch_size=batch_size, shuffle=False)
+            self.test_dataloader = DataLoader(self.test_data, batch_size=batch_size, shuffle=False)
 
     def load_data(self, path, read_labels):
 

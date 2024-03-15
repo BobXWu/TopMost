@@ -39,6 +39,30 @@ TopMost provides complete lifecycles of topic modeling, including datasets, prep
 | This is our demo paper `Towards the TopMost: A Topic Modeling System Toolkit <https://arxiv.org/pdf/2309.06908.pdf>`_.
 | This is our survey paper on neural topic models: `A Survey on Neural Topic Models: Methods, Applications, and Challenges <https://arxiv.org/pdf/2401.15351.pdf>`_.
 
+
+|
+| If you want to use our toolkit, please cite as
+
+::
+
+    @article{wu2023topmost,
+        title={Towards the TopMost: A Topic Modeling System Toolkit},
+        author={Wu, Xiaobao and Pan, Fengjun and Luu, Anh Tuan},
+        journal={arXiv preprint arXiv:2309.06908},
+        year={2023}
+    }
+
+    @article{wu2023survey,
+        title={A Survey on Neural Topic Models: Methods, Applications, and Challenges},
+        author={Wu, Xiaobao and Nguyen, Thong and Luu, Anh Tuan},
+        journal={Artificial Intelligence Review},
+        url={https://doi.org/10.1007/s10462-023-10661-7},
+        year={2024},
+        publisher={Springer}
+    }
+
+
+
 ==================
 
 .. contents:: **Table of Contents**
@@ -66,6 +90,7 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 | | Basic Topic Modeling       | | ETM_        | | Clustering                               | | ACL           |
 |                              | | NSTM_       | | Classification                           | | NYT           |
 |                              | | TSCTM_      |                                            | | Wikitext-103  |
+|                              | | BERTopic_   |                                            |                 |
 |                              | | ECRTM_      |                                            |                 |
 |                              | |             |                                            |                 |
 +------------------------------+---------------+--------------------------------------------+-----------------+
@@ -94,6 +119,7 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 .. _DecTM: https://aclanthology.org/2021.findings-acl.15.pdf
 .. _ETM: https://aclanthology.org/2020.tacl-1.29.pdf
 .. _NSTM: https://arxiv.org/abs/2008.13537
+.. _BERTopic: https://arxiv.org/pdf/2203.05794.pdf
 .. _CTM: https://aclanthology.org/2021.eacl-main.143/
 .. _TSCTM: https://aclanthology.org/2022.emnlp-main.176/
 .. _ECRTM: https://arxiv.org/pdf/2306.04217.pdf
@@ -109,6 +135,7 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 
 .. _NMTM: https://bobxwu.github.io/files/pub/NLPCC2020_Neural_Multilingual_Topic_Model.pdf
 .. _InfoCTM: https://arxiv.org/abs/2304.03544
+
 
 
 
@@ -227,6 +254,7 @@ Test new documents
         "This is a new document about Microsoft Windows, including words like windows, files, dos."
     ]
 
+    preprocessing = Preprocessing()
     parsed_new_docs, new_bow = preprocessing.parse(new_docs, vocab=dataset.vocab)
     new_doc_topic_dist = trainer.test(torch.as_tensor(new_bow, device=device).float())
 
@@ -354,30 +382,6 @@ Contributors
 .. image:: https://contrib.rocks/image?repo=bobxwu/topmost
         :alt: Contributors
 
-
-======================
-How to cite our work
-======================
-
-If you want to use our toolkit, please cite as
-
-::
-
-    @article{wu2023topmost,
-        title={Towards the TopMost: A Topic Modeling System Toolkit},
-        author={Wu, Xiaobao and Pan, Fengjun and Luu, Anh Tuan},
-        journal={arXiv preprint arXiv:2309.06908},
-        year={2023}
-    }
-
-    @article{wu2023survey,
-        title={A Survey on Neural Topic Models: Methods, Applications, and Challenges},
-        author={Wu, Xiaobao and Nguyen, Thong and Luu, Anh Tuan},
-        journal={Artificial Intelligence Review},
-        url={https://doi.org/10.1007/s10462-023-10661-7},
-        year={2024},
-        publisher={Springer}
-    }
 
 
 =================

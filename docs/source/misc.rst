@@ -34,31 +34,6 @@ Contributors
 
 
 
-=================
-How to cite our work
-=================
-If you want to use our toolkit, please cite as
-
-::
-
-    @article{wu2023topmost,
-        title={Towards the TopMost: A Topic Modeling System Toolkit},
-        author={Wu, Xiaobao and Pan, Fengjun and Luu, Anh Tuan},
-        journal={arXiv preprint arXiv:2309.06908},
-        year={2023}
-    }
-
-    @article{wu2023survey,
-        title={A Survey on Neural Topic Models: Methods, Applications, and Challenges},
-        author={Wu, Xiaobao and Nguyen, Thong and Luu, Anh Tuan},
-        journal={Artificial Intelligence Review},
-        url={https://doi.org/10.1007/s10462-023-10661-7},
-        year={2024},
-        publisher={Springer}
-    }
-
-
-
 
 =================
 Acknowledgments
