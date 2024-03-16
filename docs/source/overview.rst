@@ -4,9 +4,10 @@ Overview
 
 TopMost offers the following topic modeling scenarios with models, evaluation metrics, and datasets:
 
-.. image:: docs/source/_static/architecture.svg
+.. image:: _static/architecture.svg
     :width: 390
     :align: center
+
 
 +------------------------------+---------------+--------------------------------------------+-----------------+
 |            Scenario          |     Model     |               Evaluation Metric            |  Datasets       |
@@ -18,6 +19,7 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 | | Basic Topic Modeling       | | ETM_        | | Clustering                               | | ACL           |
 |                              | | NSTM_       | | Classification                           | | NYT           |
 |                              | | TSCTM_      |                                            | | Wikitext-103  |
+|                              | | BERTopic_   |                                            |                 |
 |                              | | ECRTM_      |                                            |                 |
 |                              | |             |                                            |                 |
 +------------------------------+---------------+--------------------------------------------+-----------------+
@@ -46,6 +48,7 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 .. _DecTM: https://aclanthology.org/2021.findings-acl.15.pdf
 .. _ETM: https://aclanthology.org/2020.tacl-1.29.pdf
 .. _NSTM: https://arxiv.org/abs/2008.13537
+.. _BERTopic: https://arxiv.org/pdf/2203.05794.pdf
 .. _CTM: https://aclanthology.org/2021.eacl-main.143/
 .. _TSCTM: https://aclanthology.org/2022.emnlp-main.176/
 .. _ECRTM: https://arxiv.org/pdf/2306.04217.pdf
@@ -61,4 +64,3 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 
 .. _NMTM: https://bobxwu.github.io/files/pub/NLPCC2020_Neural_Multilingual_Topic_Model.pdf
 .. _InfoCTM: https://arxiv.org/abs/2304.03544
-
