@@ -24,7 +24,7 @@ def read_jsonlist(path):
     data = list()
     with open(path, 'r', encoding='utf-8') as input_file:
         for line in input_file:
-            data.append(json.loads(line, encoding='utf-8'))
+            data.append(json.loads(line))
     return data
 
 

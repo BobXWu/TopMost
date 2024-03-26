@@ -268,9 +268,11 @@ class Preprocessing:
         vocab.sort()
 
         train_idx = [i for i, text in enumerate(train_texts) if len(text.split()) >= self.min_term]
+        train_idx = np.asarray(train_idx)
 
         if raw_test_texts is not None:
             test_idx = [i for i, text in enumerate(test_texts) if len(text.split()) >= self.min_term]
+            test_idx = np.asarray(test_idx)
 
         # randomly sample
         if self.test_sample_size:
