@@ -177,10 +177,11 @@ class Preprocessing:
         if not isinstance(texts, list):
             texts = [texts]
 
+        vocab_set = set(vocab)
         parsed_texts = list()
         for i, text in enumerate(tqdm(texts, desc="===>parse texts")):
             tokens = self.tokenizer(text)
-            tokens = [t for t in tokens if t in vocab]
+            tokens = [t for t in tokens if t in vocab_set]
             parsed_texts.append(' '.join(tokens))
 
         vectorizer = CountVectorizer(vocabulary=vocab, tokenizer=lambda x: x.split())
