@@ -11,6 +11,7 @@ from topmost.models.Encoder import MLPEncoder
 class CFDTM(nn.Module):
     '''
     Modeling Dynamic Topics in Chain-Free Fashion by Evolution-Tracking Contrastive Learning and Unassociated Word Exclusion. ACL 2024 Findings
+
     Xiaobao Wu, Xinshuai Dong, Liangming Pan, Thong Nguyen, Anh Tuan Luu.
     '''
 

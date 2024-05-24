@@ -14,10 +14,19 @@ def cache_path():
     return './pytest_cache/'
 
 
-def dynamic_model_test(model_module, dataset, num_topics):
-    model = model_module(num_times=dataset.num_times, train_size=dataset.train_size, num_topics=num_topics, vocab_size=dataset.vocab_size, train_time_wordfreq=dataset.train_time_wordfreq)
+@pytest.fixture
+def num_topics():
+    return 10
 
-    trainer = DynamicTrainer(model)
+
+def dynamic_model_test(model_module, dataset, num_topics):
+
+    if model_module == topmost.models.DETM:
+        model = model_module(num_times=dataset.num_times, train_size=dataset.train_size, num_topics=num_topics, vocab_size=dataset.vocab_size, train_time_wordfreq=dataset.train_time_wordfreq)
+    elif model_module == topmost.models.CFDTM:
+        model = model_module(num_times=dataset.num_times, pretrained_WE=dataset.pretrained_WE, num_topics=num_topics, vocab_size=dataset.vocab_size, train_time_wordfreq=dataset.train_time_wordfreq)
+
+    trainer = DynamicTrainer(model, verbose=True)
 
     beta = trainer.export_beta()
     assert beta.shape == (dataset.num_times, num_topics, dataset.vocab_size)
@@ -27,14 +36,13 @@ def dynamic_model_test(model_module, dataset, num_topics):
     assert test_theta.shape == (len(dataset.test_texts), num_topics)
 
 
-def test_models(cache_path):
+def test_models(cache_path, num_topics):
     download_dataset("NYT", cache_path=cache_path)
     dataset = DynamicDatasetHandler(f"{cache_path}/NYT", as_tensor=True)
 
-    num_topics = 50
-
     model_info = [
         topmost.models.DETM,
+        topmost.models.CFDTM,
     ]
 
     for model_module in model_info:

@@ -14,9 +14,14 @@ def cache_path():
     return './pytest_cache/'
 
 
+@pytest.fixture
+def num_topics_list():
+    return [10, 50, 200]
+
+
 def hierarchical_model_test(model_module, dataset, num_topics_list):
     model = model_module(num_topics_list=num_topics_list, vocab_size=dataset.vocab_size)
-    trainer = HierarchicalTrainer(model)
+    trainer = HierarchicalTrainer(model, verbose=True)
 
     beta = trainer.export_beta()
     assert len(beta) == len(num_topics_list)
@@ -35,11 +40,9 @@ def hierarchical_model_test(model_module, dataset, num_topics_list):
         assert layer_theta.shape == (len(dataset.test_texts), num_topics_list[i])
 
 
-def test_models(cache_path):
+def test_models(cache_path, num_topics_list):
     download_dataset("20NG", cache_path=cache_path)
     dataset = BasicDatasetHandler(f"{cache_path}/20NG", as_tensor=True)
-
-    num_topics_list = [10, 50, 200]
 
     model_info = [
         topmost.models.SawETM,

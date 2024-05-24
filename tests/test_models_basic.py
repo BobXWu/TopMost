@@ -14,20 +14,23 @@ def cache_path():
     return './pytest_cache/'
 
 
+@pytest.fixture
+def num_topics():
+    return 10
+
+
 def basic_model_test(model_module, dataset, num_topics):
     model = model_module(num_topics=num_topics, vocab_size=dataset.vocab_size)
-    trainer = BasicTrainer(model, dataset)
+    trainer = BasicTrainer(model, dataset, verbose=True)
     assert trainer.export_beta().shape == (num_topics, dataset.vocab_size)
     train_theta, test_theta = trainer.export_theta(dataset)
     assert train_theta.shape == (len(dataset.train_texts), num_topics)
     assert test_theta.shape == (len(dataset.test_texts), num_topics)
 
 
-def test_models(cache_path):
+def test_models(cache_path, num_topics):
     download_dataset("20NG", cache_path=cache_path)
     dataset = BasicDatasetHandler(f"{cache_path}/20NG", as_tensor=True)
-
-    num_topics = 50
 
     model_info = [
         topmost.models.ProdLDA,

@@ -16,7 +16,7 @@ def cache_path():
 
 def crosslingual_model_test(model, dataset, num_topics):
 
-    trainer = CrosslingualTrainer(model)
+    trainer = CrosslingualTrainer(model, verbose=True)
 
     beta_en, beta_cn = trainer.export_beta()
     assert beta_en.shape == beta_cn.shape
