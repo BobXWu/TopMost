@@ -27,11 +27,12 @@ alphanum = re.compile('^[a-zA-Z0-9_]+$')
 
 def get_stopwords(stopwords):
     if stopwords is None:
-        stopwords = []
-    if isinstance(stopwords, list):
-        stopword_set = stopwords
+        from gensim.parsing.preprocessing import STOPWORDS
+        stopword_set = STOPWORDS
+    elif isinstance(stopwords, list):
+        stopword_set = set(stopwords)
     elif isinstance(stopwords, str):
-        stopword_set = file_utils.read_text(stopwords)
+        stopword_set = set(file_utils.read_text(stopwords))
     else:
         raise NotImplementedError(stopwords)
 
@@ -232,7 +233,7 @@ class Preprocessing:
 
         return train_labels, test_labels
 
-    def preprocess(self, raw_train_texts, train_labels=None, raw_test_texts=None, test_labels=None):
+    def preprocess(self, raw_train_texts, train_labels=None, raw_test_texts=None, test_labels=None, pretrained_WE=True):
         np.random.seed(self.seed)
 
         train_texts = list()
@@ -299,8 +300,10 @@ class Preprocessing:
             'vocab': vocab,
             'train_bow': train_bow,
             'train_texts': train_texts,
-            'word_embeddings': make_word_embeddings(vocab)
         }
+
+        if pretrained_WE:
+            rst['word_embeddings'] = make_word_embeddings(vocab)
 
         if train_labels is not None:
             rst['train_labels'] = np.asarray(train_labels)[train_idx]
