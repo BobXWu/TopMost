@@ -13,6 +13,10 @@ from tqdm import tqdm
 from sklearn.feature_extraction.text import CountVectorizer
 
 from topmost.data import file_utils
+from topmost.utils.logger import Logger
+
+
+logger = Logger("WARNING")
 
 
 # compile some regexes
@@ -119,18 +123,34 @@ def make_word_embeddings(vocab):
     except:
         key_word_list = glove_vectors.index2word
 
-    for i, word in enumerate(tqdm(vocab, desc="===>making word embeddings")):
+    for i, word in enumerate(tqdm(vocab, desc="make word embeddings")):
         if word in key_word_list:
             word_embeddings[i] = glove_vectors[word]
             num_found += 1
 
-    print(f'===> number of found embeddings: {num_found}/{len(vocab)}')
+    logger.info(f'number of found embeddings: {num_found}/{len(vocab)}')
 
     return scipy.sparse.csr_matrix(word_embeddings)
 
 
 class Preprocessing:
-    def __init__(self, tokenizer=None, test_sample_size=None, test_p=0.2, stopwords=None, min_doc_count=0, max_doc_freq=1.0, keep_num=False, keep_alphanum=False, strip_html=False, no_lower=False, min_length=3, min_term=1, vocab_size=None, seed=42):
+    def __init__(self,
+                 tokenizer=None,
+                 test_sample_size=None,
+                 test_p=0.2,
+                 stopwords=None,
+                 min_doc_count=0,
+                 max_doc_freq=1.0,
+                 keep_num=False,
+                 keep_alphanum=False,
+                 strip_html=False,
+                 no_lower=False,
+                 min_length=3,
+                 min_term=1,
+                 vocab_size=None,
+                 seed=42,
+                 verbose=True
+                ):
         """
         Args:
             test_sample_size:
@@ -174,13 +194,18 @@ class Preprocessing:
         else:
             self.tokenizer = Tokenizer(stopwords, keep_num, keep_alphanum, strip_html, no_lower, min_length).tokenize
 
+        if verbose:
+            logger.set_level("DEBUG")
+        else:
+            logger.set_level("WARNING")
+
     def parse(self, texts, vocab):
         if not isinstance(texts, list):
             texts = [texts]
 
         vocab_set = set(vocab)
         parsed_texts = list()
-        for i, text in enumerate(tqdm(texts, desc="===>parse texts")):
+        for i, text in enumerate(tqdm(texts, desc="parse texts")):
             tokens = self.tokenizer(text)
             tokens = [t for t in tokens if t in vocab_set]
             parsed_texts.append(' '.join(tokens))
@@ -194,7 +219,7 @@ class Preprocessing:
         train_items = file_utils.read_jsonlist(os.path.join(dataset_dir, 'train.jsonlist'))
         test_items = file_utils.read_jsonlist(os.path.join(dataset_dir, 'test.jsonlist'))
 
-        print(f"Found training documents {len(train_items)} testing documents {len(test_items)}")
+        logger.info(f"Found training documents {len(train_items)} testing documents {len(test_items)}")
 
         raw_train_texts = []
         train_labels = []
@@ -224,7 +249,7 @@ class Preprocessing:
             n_labels = len(label_list)
             label2id = dict(zip(label_list, range(n_labels)))
 
-            print("label2id: ", label2id)
+            logger.info(f"label2id: {label2id}")
 
             train_labels = [label2id[label] for label in train_labels]
 
@@ -243,7 +268,7 @@ class Preprocessing:
 
         train_labels, test_labels = self.convert_labels(train_labels, test_labels)
 
-        for text in tqdm(raw_train_texts, desc="===>parse train texts"):
+        for text in tqdm(raw_train_texts, desc="parse train texts"):
             tokens = self.tokenizer(text)
             word_counts.update(tokens)
             doc_counts_counter.update(set(tokens))
@@ -251,7 +276,7 @@ class Preprocessing:
             train_texts.append(parsed_text)
 
         if raw_test_texts:
-            for text in tqdm(raw_test_texts, desc="===>parse test texts"):
+            for text in tqdm(raw_test_texts, desc="parse test texts"):
                 tokens = self.tokenizer(text)
                 word_counts.update(tokens)
                 doc_counts_counter.update(set(tokens))
@@ -278,7 +303,7 @@ class Preprocessing:
 
         # randomly sample
         if self.test_sample_size:
-            print("===>sample train and test sets...")
+            logger.info("sample train and test sets...")
 
             train_num = len(train_idx)
             test_num = len(test_idx)
@@ -291,8 +316,8 @@ class Preprocessing:
             train_idx = train_idx[np.sort(np.random.choice(train_num, train_sample_size, replace=False))]
             test_idx = test_idx[np.sort(np.random.choice(test_num, test_sample_size, replace=False))]
 
-            print(f"===>sampled train size: {len(train_idx)}")
-            print(f"===>sampled train size: {len(test_idx)}")
+            logger.info(f"sampled train size: {len(train_idx)}")
+            logger.info(f"sampled train size: {len(test_idx)}")
 
         train_texts, train_bow = self.parse(np.asarray(train_texts)[train_idx].tolist(), vocab)
 
@@ -302,14 +327,11 @@ class Preprocessing:
             'train_texts': train_texts,
         }
 
-        if pretrained_WE:
-            rst['word_embeddings'] = make_word_embeddings(vocab)
-
         if train_labels is not None:
             rst['train_labels'] = np.asarray(train_labels)[train_idx]
 
-        print(f"Real vocab size: {len(vocab)}")
-        print(f"Real training size: {len(train_texts)} \t avg length: {rst['train_bow'].sum() / len(train_texts):.3f}")
+        logger.info(f"Real vocab size: {len(vocab)}")
+        logger.info(f"Real training size: {len(train_texts)} \t avg length: {rst['train_bow'].sum() / len(train_texts):.3f}")
 
         if raw_test_texts is not None:
             rst['test_texts'], rst['test_bow'] = self.parse(np.asarray(test_texts)[test_idx].tolist(), vocab)
@@ -317,7 +339,10 @@ class Preprocessing:
             if test_labels is not None:
                 rst['test_labels'] = np.asarray(test_labels)[test_idx]
 
-            print(f"Real testing size: {len(rst['test_texts'])} \t avg length: {rst['test_bow'].sum() / len(rst['test_texts']):.3f}")
+            logger.info(f"Real testing size: {len(rst['test_texts'])} \t avg length: {rst['test_bow'].sum() / len(rst['test_texts']):.3f}")
+
+        if pretrained_WE:
+            rst['word_embeddings'] = make_word_embeddings(vocab)
 
         return rst
 

@@ -36,11 +36,11 @@ class DynamicDatasetHandler:
         self.num_times = len(np.unique(self.train_times))
         self.train_time_wordfreq = self.get_time_wordfreq(self.train_bow, self.train_times)
 
-        print('===>Info: all train size: ', len(self.train_bow))
-        print('===>Info: all test size: ', len(self.test_bow))
-        print('===>Info: all vocab size: ', len(self.vocab))
-        print('===>Info: average length: {:.3f}'.format(self.train_bow.sum(1).mean().item()))
-        print('===>Info: num of each time slice: ', self.num_times, np.bincount(self.train_times))
+        print('all train size: ', len(self.train_bow))
+        print('all test size: ', len(self.test_bow))
+        print('all vocab size: ', len(self.vocab))
+        print('average length: {:.3f}'.format(self.train_bow.sum(1).mean().item()))
+        print('num of each time slice: ', self.num_times, np.bincount(self.train_times))
 
         if as_tensor:
             self.train_bow = torch.from_numpy(self.train_bow).float().to(device)
@@ -66,6 +66,8 @@ class DynamicDatasetHandler:
         self.test_times = np.loadtxt(f'{path}/test_times.txt').astype('int32')
 
         self.vocab = file_utils.read_text(f'{path}/vocab.txt')
+
+        self.pretrained_WE = scipy.sparse.load_npz(f'{path}/word_embeddings.npz').toarray().astype('float32')
 
         if read_labels:
             self.train_labels = np.loadtxt(f'{path}/train_labels.txt').astype('int32')

@@ -1,9 +1,14 @@
 import numpy as np
+from tqdm import tqdm
+from collections import defaultdict
+
 import torch
 from torch.optim.lr_scheduler import StepLR
-from collections import defaultdict
-from tqdm import tqdm
 from topmost.utils import static_utils
+from topmost.utils.logger import Logger
+
+
+logger = Logger("WARNING")
 
 
 # transform tensor list to numpy list
@@ -12,7 +17,16 @@ def to_nparray(tensor_list):
 
 
 class HierarchicalTrainer:
-    def __init__(self, model, epochs=200, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125, log_interval=5):
+    def __init__(self,
+                 model,
+                 epochs=200,
+                 learning_rate=0.002,
+                 batch_size=200,
+                 lr_scheduler=None,
+                 lr_step_size=125,
+                 log_interval=5,
+                 verbose=False
+                ):
         self.model = model
         self.epochs = epochs
         self.learning_rate = learning_rate
@@ -20,6 +34,11 @@ class HierarchicalTrainer:
         self.lr_scheduler = lr_scheduler
         self.lr_step_size = lr_step_size
         self.log_interval = log_interval
+
+        if verbose:
+            logger.set_level("DEBUG")
+        else:
+            logger.set_level("WARNING")
 
     def make_optimizer(self,):
         args_dict = {
@@ -45,7 +64,7 @@ class HierarchicalTrainer:
         optimizer = self.make_optimizer()
 
         if self.lr_scheduler:
-            print("===>using lr_scheduler")
+            logger.info("using lr_scheduler")
             lr_scheduler = self.make_lr_scheduler(optimizer)
 
         data_size = len(dataset_handler.train_dataloader.dataset)
@@ -74,7 +93,7 @@ class HierarchicalTrainer:
                 for key in loss_rst_dict:
                     output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
 
-                print(output_log)
+                logger.info(output_log)
 
     def test(self, bow):
         data_size = bow.shape[0]

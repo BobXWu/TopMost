@@ -1,13 +1,28 @@
 import numpy as np
 from tqdm import tqdm
+from collections import defaultdict
+
 import torch
 from torch.optim.lr_scheduler import StepLR
-from collections import defaultdict
 from topmost.utils import static_utils
+from topmost.utils.logger import Logger
+
+
+logger = Logger("WARNING")
 
 
 class BasicTrainer:
-    def __init__(self, model, epochs=200, learning_rate=0.002, batch_size=200, lr_scheduler=None, lr_step_size=125, log_interval=5):
+    def __init__(self,
+                 model,
+                 epochs=200,
+                 learning_rate=0.002,
+                 batch_size=200,
+                 lr_scheduler=None,
+                 lr_step_size=125,
+                 log_interval=5,
+                 verbose=False
+                ):
+
         self.model = model
         self.epochs = epochs
         self.learning_rate = learning_rate
@@ -15,6 +30,11 @@ class BasicTrainer:
         self.lr_scheduler = lr_scheduler
         self.lr_step_size = lr_step_size
         self.log_interval = log_interval
+
+        if verbose:
+            logger.set_level("DEBUG")
+        else:
+            logger.set_level("WARNING")
 
     def make_optimizer(self,):
         args_dict = {
@@ -32,18 +52,18 @@ class BasicTrainer:
             raise NotImplementedError(self.lr_scheduler)
         return lr_scheduler
 
-    def fit_transform(self, dataset_handler, num_top_words=15, verbose=False):
-        self.train(dataset_handler, verbose)
+    def fit_transform(self, dataset_handler, num_top_words=15):
+        self.train(dataset_handler)
         top_words = self.export_top_words(dataset_handler.vocab, num_top_words)
         train_theta = self.test(dataset_handler.train_data)
 
         return top_words, train_theta
 
-    def train(self, dataset_handler, verbose=False):
+    def train(self, dataset_handler):
         optimizer = self.make_optimizer()
 
         if self.lr_scheduler:
-            print("===>using lr_scheduler")
+            logger.info("use lr_scheduler")
             lr_scheduler = self.make_lr_scheduler(optimizer)
 
         data_size = len(dataset_handler.train_dataloader.dataset)
@@ -67,12 +87,12 @@ class BasicTrainer:
             if self.lr_scheduler:
                 lr_scheduler.step()
 
-            if verbose and epoch % self.log_interval == 0:
+            if epoch % self.log_interval == 0:
                 output_log = f'Epoch: {epoch:03d}'
                 for key in loss_rst_dict:
                     output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
 
-                print(output_log)
+                logger.info(output_log)
 
     def test(self, input_data):
         data_size = input_data.shape[0]

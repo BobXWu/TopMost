@@ -21,19 +21,19 @@ def compute_topic_coherence(reference_corpus, vocab, top_words, cv_type='c_v'):
     return score
 
 
-def compute_dynamic_TC(train_texts, train_times, vocab, top_words_list, cv_type='c_v'):
+def dynamic_TC(train_texts, train_times, vocab, top_words_list, cv_type='c_v', verbose=False):
     cv_score_list = list()
 
-    for time in tqdm(range(len(top_words_list))):
+    for time, top_words in tqdm(enumerate(top_words_list)):
         # use the texts of each time slice as the reference corpus.
         idx = np.where(train_times == time)[0]
         reference_corpus = [train_texts[i] for i in idx]
 
-        # use the the topics at the time slice
-        top_words = top_words_list[time]
+        # use the topics at a time slice
         cv_score = compute_topic_coherence(reference_corpus, vocab, top_words, cv_type)
         cv_score_list.append(cv_score)
 
-    print("===>CV score list: ", cv_score_list)
+    if verbose:
+        print(f"dynamic TC list: {cv_score_list}")
 
     return np.mean(cv_score_list)

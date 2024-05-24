@@ -60,7 +60,6 @@ class DTMTrainer:
         num_workers = 20
         split_idx_list = np.array_split(np.arange(len(bow)), num_workers)
         worker_size_list = [len(x) for x in split_idx_list]
-        print("===>worker_size_list: ", worker_size_list)
 
         worker_id = 0
         docs_list = [list() for i in range(num_workers)]

@@ -22,9 +22,9 @@ def download_save(output_dir):
 
 
 def download_articles(name, categories, subset, output_dir):
-    print("===>name: ", name)
-    print("===>categories: ", categories)
-    print("===>subset: ", subset)
+    print("name: ", name)
+    print("categories: ", categories)
+    print("subset: ", subset)
 
     data = []
     print("Downloading articles")

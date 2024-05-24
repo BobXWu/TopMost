@@ -10,6 +10,7 @@ from .crosslingual.NMTM import NMTM
 from .crosslingual.InfoCTM.InfoCTM import InfoCTM
 
 from .dynamic.DETM import DETM
+from .dynamic.CFDTM.CFDTM import CFDTM
 
 from .hierarchical.SawETM.SawETM import SawETM
 from .hierarchical.HyperMiner.HyperMiner import HyperMiner
