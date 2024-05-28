@@ -146,7 +146,7 @@ class Preprocessing:
                  strip_html=False,
                  no_lower=False,
                  min_length=3,
-                 min_term=1,
+                 min_term=0,
                  vocab_size=None,
                  seed=42,
                  verbose=True
