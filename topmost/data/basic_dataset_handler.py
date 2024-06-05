@@ -4,6 +4,7 @@ import numpy as np
 import scipy.sparse
 import scipy.io
 from sentence_transformers import SentenceTransformer
+from topmost.preprocessing import Preprocessing
 from . import file_utils
 
 
@@ -14,7 +15,10 @@ def load_contextual_embed(texts, device, model_name="all-mpnet-base-v2", show_pr
 
 
 class RawDatasetHandler:
-    def __init__(self, docs, preprocessing, batch_size=200, device='cpu', as_tensor=False, contextual_embed=False, pretrained_WE=True):
+    def __init__(self, docs, preprocessing=None, batch_size=200, device='cpu', as_tensor=False, contextual_embed=False, pretrained_WE=True):
+
+        if preprocessing is None:
+            preprocessing = Preprocessing()
 
         rst = preprocessing.preprocess(docs, pretrained_WE=pretrained_WE)
         self.train_data = rst['train_bow']
