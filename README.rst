@@ -36,8 +36,8 @@
 TopMost provides complete lifecycles of topic modeling, including datasets, preprocessing, models, training, and evaluations. It covers the most popular topic modeling scenarios, like basic, dynamic, hierarchical, and cross-lingual topic modeling.
 
 
-| This is our demo paper `Towards the TopMost: A Topic Modeling System Toolkit <https://arxiv.org/pdf/2309.06908.pdf>`_.
-| This is our survey paper on neural topic models: `A Survey on Neural Topic Models: Methods, Applications, and Challenges <https://arxiv.org/pdf/2401.15351.pdf>`_.
+| Check our ACL 2024 demo paper: `Towards the TopMost: A Topic Modeling System Toolkit <https://arxiv.org/pdf/2309.06908.pdf>`_.
+| Check our survey paper on neural topic models, accepted to Artificial Intelligence Review: `A Survey on Neural Topic Models: Methods, Applications, and Challenges <https://arxiv.org/pdf/2401.15351.pdf>`_.
 
 
 |
