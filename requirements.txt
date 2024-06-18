@@ -1,9 +1,9 @@
 numpy<1.27.0
 scipy<=1.10.1
-sentence-transformers>=2.6.0
+sentence-transformers>=2.6.0,<3.0.0
 torchvision>=0.14.1
 gensim>=4.2.0
 scikit-learn>=0.24.2
 tqdm>=4.66.0
-python-Levenshtein
+fastopic>=0.0.1
 bertopic>=0.15.0

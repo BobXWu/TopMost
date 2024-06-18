@@ -7,11 +7,11 @@ with open('requirements.txt', 'r') as f:
 with open('README.rst') as f:
     readme = f.read()
 
-VERSION = '0.0.3'
-DESCRIPTION = 'Towards the Topmost: A Topic Modeling System Tookit'
+VERSION = '0.0.4'
+DESCRIPTION = 'Topmost: A Topic Modeling System Tookit'
 LONG_DESCRIPTION = """
     [TopMost](https://github.com/bobxwu/topmost) provides complete lifecycles of topic modeling, including datasets, models, training, and evaluations.
-    It covers the most popular topic modeling scenarios, like dynamic, hierarchical, and cross-lingual topic modeling.
+    It covers the most popular topic modeling scenarios, like basic, dynamic, hierarchical, and cross-lingual topic modeling.
 """
 
 
