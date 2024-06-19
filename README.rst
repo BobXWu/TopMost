@@ -162,34 +162,27 @@ We can get the top words of discovered topics, ``topic_top_words`` and the topic
 The preprocessing steps are configurable. See our documentations.
 
 .. code-block:: python
-
     import topmost
+    from topmost.data import RawDataset
     from topmost.preprocessing import Preprocessing
+    from sklearn.datasets import fetch_20newsgroups
 
-    # Your own documents
-    docs = [
-        "This is a document about space, including words like space, satellite, launch, orbit.",
-        "This is a document about Microsoft Windows, including words like windows, files, dos.",
-        # more documents...
-    ]
+    docs = fetch_20newsgroups(subset='all',  remove=('headers', 'footers', 'quotes'))['data']
+    preprocessing = Preprocessing(vocab_size=10000, stopwords='English')
 
     device = 'cuda' # or 'cpu'
+    dataset = RawDataset(docs, preprocessing, device=device)
 
-    
-    dataset = topmost.data.RawDatasetHandler(docs, device=device, as_tensor=True)
+    trainer = topmost.trainers.FASTopicTrainer(dataset, verbose=True)
+    top_words, doc_topic_dist = trainer.train()
 
-    # If your datasets needs preprocessing:
-    # preprocessing = Preprocessing()
-    # dataset = topmost.data.RawDatasetHandler(docs, preprocessing, device=device, as_tensor=True)
+    new_docs = [
+        "This is a document about space, including words like space, satellite, launch, orbit.",
+        "This is a document about Microsoft Windows, including words like windows, files, dos."
+    ]
 
-    model = topmost.models.ProdLDA(dataset.vocab_size, num_topics=2)
-    model = model.to(device)
-
-    trainer = topmost.trainers.BasicTrainer(model)
-
-    topic_top_words, doc_topic_dist = trainer.fit_transform(dataset)
-
-
+    new_theta = trainer.test(new_docs)
+    print(new_theta.argmax(1))
 
 
 ============
@@ -215,16 +208,16 @@ Train a model
     device = "cuda" # or "cpu"
 
     # load a preprocessed dataset
-    dataset = topmost.data.BasicDatasetHandler("./datasets/20NG", device=device, read_labels=True, as_tensor=True)
+    dataset = topmost.data.BasicDataset("./datasets/20NG", device=device, read_labels=True)
     # create a model
     model = topmost.models.ProdLDA(dataset.vocab_size)
     model = model.to(device)
 
     # create a trainer
-    trainer = topmost.trainers.BasicTrainer(model)
+    trainer = topmost.trainers.BasicTrainer(model, dataset)
 
     # train the model
-    trainer.train(dataset)
+    topic_top_words, train_theta = trainer.train()
 
 
 Evaluate
@@ -232,17 +225,16 @@ Evaluate
 
 .. code-block:: python
 
-    # get theta (doc-topic distributions)
-    train_theta, test_theta = trainer.export_theta(dataset)
     # get top words of topics
     topic_top_words = trainer.export_top_words(dataset.vocab)
 
     # evaluate topic diversity
     TD = topmost.evaluations.compute_topic_diversity(top_words)
 
+    # get doc-topic distributions of testing samples
+    test_doc_topic_dist = trainer.test(dataset.test_data)
     # evaluate clustering
     clustering_results = topmost.evaluations.evaluate_clustering(test_theta, dataset.test_labels)
-
     # evaluate classification
     classification_results = topmost.evaluations.evaluate_classification(train_theta, test_theta, dataset.train_labels, dataset.test_labels)
 

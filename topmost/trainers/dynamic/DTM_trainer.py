@@ -4,7 +4,11 @@ from gensim.models import ldaseqmodel
 from tqdm import tqdm
 import datetime
 from multiprocessing.pool import Pool
-from topmost.utils import static_utils
+from topmost.utils import _utils
+from topmost.utils.logger import Logger
+
+
+logger = Logger("WARNING")
 
 
 def work(arguments):
@@ -16,10 +20,23 @@ def work(arguments):
 
 
 class DTMTrainer:
-    def __init__(self, dataset_handler, num_topics=50, alphas=0.01, chain_variance=0.005, passes=10, lda_inference_max_iter=25, em_min_iter=6, em_max_iter=20):
-        self.dataset_handler = dataset_handler
-        self.vocab_size = dataset_handler.vocab_size
+    def __init__(self,
+                 dataset,
+                 num_topics=50,
+                 num_top_words=15,
+                 alphas=0.01,
+                 chain_variance=0.005,
+                 passes=10,
+                 lda_inference_max_iter=25,
+                 em_min_iter=6,
+                 em_max_iter=20,
+                 verbose=False
+                ):
+
+        self.dataset = dataset
+        self.vocab_size = dataset.vocab_size
         self.num_topics = num_topics
+        self.num_top_words = num_top_words
         self.alphas = alphas
         self.chain_variance = chain_variance
         self.passes = passes
@@ -27,10 +44,16 @@ class DTMTrainer:
         self.em_min_iter = em_min_iter
         self.em_max_iter = em_max_iter
 
+        self.verbose = verbose
+        if verbose:
+            logger.set_level("DEBUG")
+        else:
+            logger.set_level("WARNING")
+
     def train(self):
-        id2word = dict(zip(range(self.vocab_size), self.dataset_handler.vocab))
-        train_bow = self.dataset_handler.train_bow
-        train_times = self.dataset_handler.train_times.astype('int32')
+        id2word = dict(zip(range(self.vocab_size), self.dataset.vocab))
+        train_bow = self.dataset.train_bow
+        train_times = self.dataset.train_times.astype('int32')
 
         # order documents by time slices
         self.doc_order_idx = np.argsort(train_times)
@@ -95,7 +118,7 @@ class DTMTrainer:
         # NOTE: MUST transform gamma to original order.
         return theta[np.argsort(self.doc_order_idx)]
 
-    def export_beta(self):
+    def get_beta(self):
         beta = list()
         # K x V x T
         for item in self.model.topic_chains:
@@ -109,15 +132,17 @@ class DTMTrainer:
         beta = beta / beta.sum(-1, keepdims=True)
         return beta
 
-    def export_top_words(self, num_top=15):
-        beta = self.export_beta()
+    def get_top_words(self, num_top_words=None):
+        if num_top_words is None:
+            num_top_words = self.num_top_words
+        beta = self.get_beta()
         top_words_list = list()
         for time in range(beta.shape[0]):
-            top_words = static_utils.print_topic_words(beta[time], vocab=self.dataset_handler.vocab, num_top=num_top)
+            top_words = _utils.get_top_words(beta[time], self.dataset.vocab, num_top_words, self.verbose)
             top_words_list.append(top_words)
         return top_words_list
 
     def export_theta(self):
         train_theta = self.get_theta()
-        test_theta = self.test(self.dataset_handler.test_bow)
+        test_theta = self.test(self.dataset.test_bow)
         return train_theta, test_theta

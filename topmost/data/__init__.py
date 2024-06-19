@@ -1,6 +1,6 @@
-from .basic_dataset_handler import BasicDatasetHandler
-from .basic_dataset_handler import RawDatasetHandler
-from .crosslingual_dataset_handler import CrosslingualDatasetHandler
-from .dynamic_dataset_handler import DynamicDatasetHandler
+from .basic_dataset import BasicDataset
+from .basic_dataset import RawDataset
+from .crosslingual_dataset import CrosslingualDataset
+from .dynamic_dataset import DynamicDataset
 
 from .download import download_dataset

@@ -14,11 +14,11 @@ def load_contextual_embed(texts, device, model_name="all-mpnet-base-v2", show_pr
     return embeddings
 
 
-class RawDatasetHandler:
-    def __init__(self, docs, preprocessing=None, batch_size=200, device='cpu', as_tensor=False, contextual_embed=False, pretrained_WE=True):
+class RawDataset:
+    def __init__(self, docs, preprocessing=None, batch_size=200, device='cpu', as_tensor=True, contextual_embed=False, pretrained_WE=True):
 
         if preprocessing is None:
-            preprocessing = Preprocessing()
+            preprocessing = Preprocessing(stopwords='English_stopwords')
 
         rst = preprocessing.preprocess(docs, pretrained_WE=pretrained_WE)
         self.train_data = rst['train_bow']
@@ -39,8 +39,8 @@ class RawDatasetHandler:
             self.train_dataloader = DataLoader(self.train_data, batch_size=batch_size, shuffle=True)
 
 
-class BasicDatasetHandler:
-    def __init__(self, dataset_dir, batch_size=200, read_labels=False, device='cpu', as_tensor=False, contextual_embed=False):
+class BasicDataset:
+    def __init__(self, dataset_dir, batch_size=200, read_labels=False, as_tensor=True, contextual_embed=False, device='cpu'):
         # train_bow: NxV
         # test_bow: Nxv
         # word_emeddings: VxD

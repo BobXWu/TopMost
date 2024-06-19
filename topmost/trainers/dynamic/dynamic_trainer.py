@@ -4,7 +4,7 @@ from collections import defaultdict
 
 import torch
 from torch.optim.lr_scheduler import StepLR
-from topmost.utils import static_utils
+from topmost.utils import _utils
 from topmost.utils.logger import Logger
 
 
@@ -14,6 +14,8 @@ logger = Logger("WARNING")
 class DynamicTrainer:
     def __init__(self,
                  model,
+                 dataset,
+                 num_top_words=15,
                  epochs=200,
                  learning_rate=0.002,
                  batch_size=200,
@@ -24,6 +26,8 @@ class DynamicTrainer:
                 ):
 
         self.model = model
+        self.dataset = dataset
+        self.num_top_words = num_top_words
         self.epochs = epochs
         self.learning_rate = learning_rate
         self.batch_size = batch_size
@@ -31,6 +35,7 @@ class DynamicTrainer:
         self.lr_step_size = lr_step_size
         self.log_interval = log_interval
 
+        self.verbose = verbose
         if verbose:
             logger.set_level("DEBUG")
         else:
@@ -49,27 +54,20 @@ class DynamicTrainer:
         lr_scheduler = StepLR(optimizer, step_size=self.lr_step_size, gamma=0.5, verbose=False)
         return lr_scheduler
 
-    def fit_transform(self, dataset_handler, num_top_words=15, verbose=False):
-        self.train(dataset_handler, verbose)
-        top_words = self.export_top_words(dataset_handler.vocab, num_top_words)
-        train_theta = self.test(dataset_handler.train_bow, dataset_handler.train_times)
-
-        return top_words, train_theta
-
-    def train(self, dataset_handler, verbose=False):
+    def train(self):
         optimizer = self.make_optimizer()
 
         if self.lr_scheduler:
             logger.info("using lr_scheduler")
             lr_scheduler = self.make_lr_scheduler(optimizer)
 
-        data_size = len(dataset_handler.train_dataloader.dataset)
+        data_size = len(self.dataset.train_dataloader.dataset)
 
         for epoch in tqdm(range(1, self.epochs + 1)):
             self.model.train()
             loss_rst_dict = defaultdict(float)
 
-            for batch_data in dataset_handler.train_dataloader:
+            for batch_data in self.dataset.train_dataloader:
 
                 rst_dict = self.model(batch_data['bow'], batch_data['times'])
                 batch_loss = rst_dict['loss']
@@ -84,12 +82,17 @@ class DynamicTrainer:
             if self.lr_scheduler:
                 lr_scheduler.step()
 
-            if verbose and epoch % self.log_interval == 0:
+            if epoch % self.log_interval == 0:
                 output_log = f'Epoch: {epoch:03d}'
                 for key in loss_rst_dict:
                     output_log += f' {key}: {loss_rst_dict[key] / data_size :.3f}'
 
                 logger.info(output_log)
+
+        top_words = self.get_top_words()
+        train_theta = self.test(self.dataset.train_bow, self.dataset.train_times)
+
+        return top_words, train_theta
 
     def test(self, bow, times):
         data_size = bow.shape[0]
@@ -105,21 +108,26 @@ class DynamicTrainer:
         theta = np.asarray(theta)
         return theta
 
-    def export_beta(self):
+    def get_beta(self):
         self.model.eval()
         beta = self.model.get_beta().detach().cpu().numpy()
         return beta
 
-    def export_top_words(self, vocab, num_top_words=15):
-        beta = self.export_beta()
+    def get_top_words(self, num_top_words=None):
+        if num_top_words is None:
+            num_top_words = self.num_top_words
+
+        beta = self.get_beta()
         top_words_list = list()
         for time in range(beta.shape[0]):
-            print(f"======= Time: {time} =======")
-            top_words = static_utils.print_topic_words(beta[time], vocab, num_top_words)
+            if self.verbose:
+                print(f"======= Time: {time} =======")
+            top_words = _utils.get_top_words(beta[time], self.dataset.vocab, num_top_words, self.verbose)
             top_words_list.append(top_words)
         return top_words_list
 
-    def export_theta(self, dataset_handler):
-        train_theta = self.test(dataset_handler.train_bow, dataset_handler.train_times)
-        test_theta = self.test(dataset_handler.test_bow, dataset_handler.test_times)
+    def export_theta(self):
+        train_theta = self.test(self.dataset.train_bow, self.dataset.train_times)
+        test_theta = self.test(self.dataset.test_bow, self.dataset.test_times)
+
         return train_theta, test_theta

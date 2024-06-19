@@ -6,7 +6,7 @@ import scipy.io
 from . import file_utils
 
 
-class SequentialDataset(Dataset):
+class _SequentialDataset(Dataset):
     def __init__(self, bow, times, time_wordfreq):
         super().__init__()
         self.bow = bow
@@ -26,8 +26,8 @@ class SequentialDataset(Dataset):
         return return_dict
 
 
-class DynamicDatasetHandler:
-    def __init__(self, dataset_dir, batch_size=200, read_labels=False, device='cpu', as_tensor=False):
+class DynamicDataset:
+    def __init__(self, dataset_dir, batch_size=200, read_labels=False, device='cpu', as_tensor=True):
 
         self.load_data(dataset_dir, read_labels)
 
@@ -49,8 +49,8 @@ class DynamicDatasetHandler:
             self.test_times = torch.from_numpy(self.test_times).long().to(device)
             self.train_time_wordfreq = torch.from_numpy(self.train_time_wordfreq).float().to(device)
 
-            self.train_dataset = SequentialDataset(self.train_bow, self.train_times, self.train_time_wordfreq)
-            self.test_dataset = SequentialDataset(self.test_bow, self.test_times, self.train_time_wordfreq)
+            self.train_dataset = _SequentialDataset(self.train_bow, self.train_times, self.train_time_wordfreq)
+            self.test_dataset = _SequentialDataset(self.test_bow, self.test_times, self.train_time_wordfreq)
 
             self.train_dataloader = DataLoader(self.train_dataset, batch_size=batch_size, shuffle=True)
 

@@ -7,7 +7,7 @@ from torch.utils.data import Dataset, DataLoader
 from . import file_utils
 
 
-class BilingualTextDataset(Dataset):
+class _BilingualDataset(Dataset):
     def __init__(self, bow_en, bow_cn):
         self.bow_en = bow_en
         self.bow_cn = bow_cn
@@ -25,7 +25,7 @@ class BilingualTextDataset(Dataset):
         return return_dict
 
 
-class CrosslingualDatasetHandler:
+class CrosslingualDataset:
     def __init__(self, dataset_dir, lang1, lang2, dict_path, device='cpu', batch_size=200, as_tensor=True):
         self.batch_size = batch_size
 
@@ -51,8 +51,8 @@ class CrosslingualDatasetHandler:
             self.train_bow_cn = self.move_to_device(self.train_bow_cn, device)
             self.test_bow_cn = self.move_to_device(self.test_bow_cn, device)
 
-            self.train_dataloader = DataLoader(BilingualTextDataset(self.train_bow_en, self.train_bow_cn), batch_size=batch_size, shuffle=True)
-            self.test_dataloader = DataLoader(BilingualTextDataset(self.test_bow_en, self.test_bow_cn), batch_size=batch_size, shuffle=False)
+            self.train_dataloader = DataLoader(_BilingualDataset(self.train_bow_en, self.train_bow_cn), batch_size=batch_size, shuffle=True)
+            self.test_dataloader = DataLoader(_BilingualDataset(self.test_bow_en, self.test_bow_cn), batch_size=batch_size, shuffle=False)
 
     def move_to_device(self, bow, device):
         return torch.as_tensor(bow, device=device).float()

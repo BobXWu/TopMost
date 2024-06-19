@@ -29,8 +29,8 @@ alpha_or_num = re.compile('^[a-zA-Z_]+|[0-9_]+$')
 alphanum = re.compile('^[a-zA-Z0-9_]+$')
 
 
-def get_stopwords(stopwords):
-    if stopwords is None:
+def get_stopwords(stopwords=[]):
+    if stopwords == 'English':
         from gensim.parsing.preprocessing import STOPWORDS
         stopword_set = STOPWORDS
     elif isinstance(stopwords, list):
@@ -44,7 +44,14 @@ def get_stopwords(stopwords):
 
 
 class Tokenizer:
-    def __init__(self, stopwords, keep_num, keep_alphanum, strip_html, no_lower, min_length):
+    def __init__(self,
+                 stopwords,
+                 keep_num,
+                 keep_alphanum,
+                 strip_html,
+                 no_lower,
+                 min_length
+                ):
         self.keep_num = keep_num
         self.keep_alphanum = keep_alphanum
         self.strip_html = strip_html
@@ -123,7 +130,7 @@ def make_word_embeddings(vocab):
     except:
         key_word_list = glove_vectors.index2word
 
-    for i, word in enumerate(tqdm(vocab, desc="make word embeddings")):
+    for i, word in enumerate(tqdm(vocab, desc="loading word embeddings")):
         if word in key_word_list:
             word_embeddings[i] = glove_vectors[word]
             num_found += 1
@@ -138,7 +145,7 @@ class Preprocessing:
                  tokenizer=None,
                  test_sample_size=None,
                  test_p=0.2,
-                 stopwords=None,
+                 stopwords=[],
                  min_doc_count=0,
                  max_doc_freq=1.0,
                  keep_num=False,
@@ -158,7 +165,7 @@ class Preprocessing:
             test_p:
                 Proportion of the test set. This helps sample the train set based on the size of the test set.
             stopwords:
-                List of stopwords to exclude [None|mallet|snowball].
+                List of stopwords to exclude.
             min-doc-count:
                 Exclude words that occur in less than this number of documents.
             max_doc_freq:
@@ -205,7 +212,7 @@ class Preprocessing:
 
         vocab_set = set(vocab)
         parsed_texts = list()
-        for i, text in enumerate(tqdm(texts, desc="parse texts")):
+        for i, text in enumerate(tqdm(texts, desc="parsing texts")):
             tokens = self.tokenizer(text)
             tokens = [t for t in tokens if t in vocab_set]
             parsed_texts.append(' '.join(tokens))
@@ -268,7 +275,7 @@ class Preprocessing:
 
         train_labels, test_labels = self.convert_labels(train_labels, test_labels)
 
-        for text in tqdm(raw_train_texts, desc="parse train texts"):
+        for text in tqdm(raw_train_texts, desc="loading train texts"):
             tokens = self.tokenizer(text)
             word_counts.update(tokens)
             doc_counts_counter.update(set(tokens))
@@ -276,7 +283,7 @@ class Preprocessing:
             train_texts.append(parsed_text)
 
         if raw_test_texts:
-            for text in tqdm(raw_test_texts, desc="parse test texts"):
+            for text in tqdm(raw_test_texts, desc="loading test texts"):
                 tokens = self.tokenizer(text)
                 word_counts.update(tokens)
                 doc_counts_counter.update(set(tokens))

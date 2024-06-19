@@ -248,7 +248,7 @@ class DETM(nn.Module):
         return rst_dict
 
     def init_hidden(self):
-        """Initializes the first hidden state of the RNN used as inference network for \eta.
+        """Initializes the first hidden state of the RNN used as inference network for \\eta.
         """
         weight = next(self.parameters())
         nlayers = self.eta_nlayers
