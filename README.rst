@@ -217,16 +217,13 @@ Train a model
     trainer = topmost.trainers.BasicTrainer(model, dataset)
 
     # train the model
-    topic_top_words, train_theta = trainer.train()
+    top_words, train_theta = trainer.train()
 
 
 Evaluate
 -----------------------------------
 
 .. code-block:: python
-
-    # get top words of topics
-    topic_top_words = trainer.export_top_words(dataset.vocab)
 
     # evaluate topic diversity
     TD = topmost.evaluations.compute_topic_diversity(top_words)
@@ -390,4 +387,3 @@ Acknowledgments
 - If you want to add any models to this package, we welcome your pull requests.
 - If you encounter any problem, please either directly contact `Xiaobao Wu <xiaobao002@e.ntu.edu.sg>`_ or leave an issue in the GitHub repo.
 - Icon by `Flat-icons-com <https://www.freepik.com/icon/top_671169>`_.
-

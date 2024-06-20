@@ -18,7 +18,7 @@ class RawDataset:
     def __init__(self, docs, preprocessing=None, batch_size=200, device='cpu', as_tensor=True, contextual_embed=False, pretrained_WE=True):
 
         if preprocessing is None:
-            preprocessing = Preprocessing(stopwords='English_stopwords')
+            preprocessing = Preprocessing(stopwords='English')
 
         rst = preprocessing.preprocess(docs, pretrained_WE=pretrained_WE)
         self.train_data = rst['train_bow']

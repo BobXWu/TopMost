@@ -33,12 +33,11 @@ def get_stopwords(stopwords=[]):
     if stopwords == 'English':
         from gensim.parsing.preprocessing import STOPWORDS
         stopword_set = STOPWORDS
-    elif isinstance(stopwords, list):
-        stopword_set = set(stopwords)
+
     elif isinstance(stopwords, str):
-        stopword_set = set(file_utils.read_text(stopwords))
-    else:
-        raise NotImplementedError(stopwords)
+        stopword_set = file_utils.read_text(stopwords)
+
+    stopword_set = frozenset(stopwords)
 
     return stopword_set
 
