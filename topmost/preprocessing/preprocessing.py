@@ -12,7 +12,7 @@ import scipy.sparse
 from tqdm import tqdm
 from sklearn.feature_extraction.text import CountVectorizer
 
-from topmost.data import file_utils
+from topmost.utils._utils import get_stopwords_set
 from topmost.utils.logger import Logger
 
 
@@ -27,19 +27,6 @@ replace = re.compile('[%s]' % re.escape(punctuation))
 alpha = re.compile('^[a-zA-Z_]+$')
 alpha_or_num = re.compile('^[a-zA-Z_]+|[0-9_]+$')
 alphanum = re.compile('^[a-zA-Z0-9_]+$')
-
-
-def get_stopwords(stopwords=[]):
-    if stopwords == 'English':
-        from gensim.parsing.preprocessing import STOPWORDS
-        stopword_set = STOPWORDS
-
-    elif isinstance(stopwords, str):
-        stopword_set = file_utils.read_text(stopwords)
-
-    stopword_set = frozenset(stopwords)
-
-    return stopword_set
 
 
 class Tokenizer:
@@ -57,7 +44,7 @@ class Tokenizer:
         self.lower = not no_lower
         self.min_length = min_length
 
-        self.stopword_set = get_stopwords(stopwords)
+        self.stopword_set = get_stopwords_set(stopwords)
 
     def clean_text(self, text, strip_html=False, lower=True, keep_emails=False, keep_at_mentions=False):
         # remove html tags

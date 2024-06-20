@@ -1,6 +1,10 @@
 import os
 import zipfile
 from torchvision.datasets.utils import download_url
+from topmost.utils.logger import Logger
+
+
+logger = Logger("WARNING")
 
 
 def download_dataset(dataset_name, cache_path="~/.topmost"):
@@ -13,12 +17,15 @@ def download_dataset(dataset_name, cache_path="~/.topmost"):
     else:
         zipped_dataset_url = f"https://raw.githubusercontent.com/BobXWu/TopMost/master/data/{raw_filename}"
 
-    print(zipped_dataset_url)
+    logger.info(zipped_dataset_url)
 
     download_url(zipped_dataset_url, root=cache_path, filename=raw_filename, md5=None)
 
-    with zipfile.ZipFile(f'{cache_path}/{raw_filename}', 'r') as zip_ref:
+    path = f'{cache_path}/{raw_filename}'
+    with zipfile.ZipFile(path, 'r') as zip_ref:
         zip_ref.extractall(cache_path)
+
+    os.remove(path)
 
 
 if __name__ == '__main__':
