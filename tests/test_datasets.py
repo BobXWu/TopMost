@@ -5,7 +5,7 @@ import sys
 sys.path.append('../')
 
 from topmost.data import download_dataset
-from topmost.data import BasicDatasetHandler
+from topmost.data import BasicDataset
 
 
 @pytest.fixture
@@ -17,7 +17,7 @@ def dataset_test(cache_path, name, data_size, vocab_size, num_labels=None):
     print(name)
     print(num_labels)
     download_dataset(name, cache_path=cache_path)
-    dataset = BasicDatasetHandler(f"{cache_path}/{name}", read_labels=(num_labels is not None))
+    dataset = BasicDataset(f"{cache_path}/{name}", read_labels=(num_labels is not None))
 
     assert (len(dataset.train_texts) + len(dataset.test_texts)) == data_size
     assert dataset.vocab_size == vocab_size

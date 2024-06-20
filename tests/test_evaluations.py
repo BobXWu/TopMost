@@ -5,7 +5,7 @@ sys.path.append('../')
 
 import topmost
 from topmost.data import download_dataset
-from topmost.data import BasicDatasetHandler, DynamicDatasetHandler
+from topmost.data import BasicDataset, DynamicDataset
 from topmost.trainers import BasicTrainer, DynamicTrainer
 from topmost.models import ETM, DETM
 
@@ -22,12 +22,12 @@ def num_topics():
 
 def test_basic_evaluations(cache_path, num_topics):
     download_dataset("20NG", cache_path=cache_path)
-    dataset = BasicDatasetHandler(f"{cache_path}/20NG", as_tensor=True)
+    dataset = BasicDataset(f"{cache_path}/20NG", as_tensor=True)
 
     model = ETM(num_topics=num_topics, vocab_size=dataset.vocab_size)
-    trainer = BasicTrainer(model, verbose=True)
+    trainer = BasicTrainer(model, verbose=True, epochs=1)
 
-    top_words = trainer.export_top_words(dataset.vocab)
+    top_words = trainer.get_top_words()
     TD = topmost.evaluations.compute_topic_diversity(top_words)
     TC = topmost.evaluations.compute_topic_coherence(dataset.train_texts, dataset.vocab, top_words)
     print("TD: ", TD)
@@ -36,12 +36,12 @@ def test_basic_evaluations(cache_path, num_topics):
 
 def test_dynamic_evaluations(cache_path, num_topics):
     download_dataset("NYT", cache_path=cache_path)
-    dataset = DynamicDatasetHandler(f"{cache_path}/NYT", as_tensor=True)
+    dataset = DynamicDataset(f"{cache_path}/NYT", as_tensor=True)
 
     model = DETM(num_times=dataset.num_times, train_size=dataset.train_size, num_topics=num_topics, vocab_size=dataset.vocab_size, train_time_wordfreq=dataset.train_time_wordfreq)
-    trainer = DynamicTrainer(model, verbose=True)
+    trainer = DynamicTrainer(model, dataset, verbose=True, epochs=1)
 
-    top_words = trainer.export_top_words(dataset.vocab)
+    top_words = trainer.get_top_words()
     TD = topmost.evaluations.dynamic_TD(top_words, dataset.train_bow.numpy(), dataset.train_times.numpy(), dataset.vocab)
     TC = topmost.evaluations.dynamic_TC(dataset.train_texts, dataset.train_times, dataset.vocab, top_words)
 
