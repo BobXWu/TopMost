@@ -25,7 +25,7 @@ def test_basic_evaluations(cache_path, num_topics):
     dataset = BasicDataset(f"{cache_path}/20NG", as_tensor=True)
 
     model = ETM(num_topics=num_topics, vocab_size=dataset.vocab_size)
-    trainer = BasicTrainer(model, verbose=True, epochs=1)
+    trainer = BasicTrainer(model, dataset, verbose=True, epochs=1)
 
     top_words = trainer.get_top_words()
     TD = topmost.evaluations.compute_topic_diversity(top_words)

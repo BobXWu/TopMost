@@ -5,5 +5,5 @@ torchvision>=0.14.1
 gensim>=4.2.0
 scikit-learn>=0.24.2
 tqdm>=4.66.0
-fastopic>=0.0.1
+fastopic>=0.0.3
 bertopic>=0.15.0

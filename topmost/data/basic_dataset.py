@@ -6,19 +6,46 @@ import scipy.io
 from sentence_transformers import SentenceTransformer
 from topmost.preprocessing import Preprocessing
 from . import file_utils
+from typing import List, Tuple, Union, Mapping, Any, Callable, Iterable
 
 
-def load_contextual_embed(texts, device, model_name="all-mpnet-base-v2", show_progress_bar=True):
-    model = SentenceTransformer(model_name, device=device)
-    embeddings = model.encode(texts, show_progress_bar=show_progress_bar)
-    return embeddings
+class DocEmbedModel:
+    def __init__(self,
+                 model: str="all-MiniLM-L6-v2",
+                 device: str='cpu'
+                ):
+
+        if isinstance(model, str):
+            self.doc_embed_model = SentenceTransformer(model, device=device)
+        else:
+            self.doc_embed_model = model
+
+    def encode(self,
+               docs:List[str],
+               convert_to_tensor: bool=False,
+               verbose:bool=False
+            ):
+
+        embeddings = self.doc_embed_model.encode(docs, convert_to_tensor=convert_to_tensor, show_progress_bar=verbose)
+        return embeddings
 
 
 class RawDataset:
-    def __init__(self, docs, preprocessing=None, batch_size=200, device='cpu', as_tensor=True, contextual_embed=False, pretrained_WE=True):
+    def __init__(self,
+                 docs,
+                 preprocessing=None,
+                 batch_size=200,
+                 device='cpu',
+                 as_tensor=True,
+                 contextual_embed=False,
+                 pretrained_WE=True,
+                 doc_embed_model="all-MiniLM-L6-v2",
+                 embed_model_device=None,
+                 verbose=False
+                ):
 
         if preprocessing is None:
-            preprocessing = Preprocessing(stopwords='English')
+            preprocessing = Preprocessing()
 
         rst = preprocessing.preprocess(docs, pretrained_WE=pretrained_WE)
         self.train_data = rst['train_bow']
@@ -28,7 +55,10 @@ class RawDataset:
         self.vocab_size = len(self.vocab)
 
         if contextual_embed:
-            self.train_contextual_embed = load_contextual_embed(self.train_texts, device)
+            if embed_model_device is None:
+                embed_model_device = device
+            self.doc_embed_model = DocEmbedModel(doc_embed_model, embed_model_device)
+            self.train_contextual_embed = self.doc_embed_model.encode(docs, verbose=verbose)
             self.contextual_embed_size = self.train_contextual_embed.shape[1]
 
         if as_tensor:
@@ -40,7 +70,15 @@ class RawDataset:
 
 
 class BasicDataset:
-    def __init__(self, dataset_dir, batch_size=200, read_labels=False, as_tensor=True, contextual_embed=False, device='cpu'):
+    def __init__(self,
+                 dataset_dir,
+                 batch_size=200,
+                 read_labels=False,
+                 as_tensor=True,
+                 contextual_embed=False,
+                 doc_embed_model="all-MiniLM-L6-v2",
+                 device='cpu'
+                ):
         # train_bow: NxV
         # test_bow: Nxv
         # word_emeddings: VxD
@@ -55,8 +93,10 @@ class BasicDataset:
         print("average length: {:.3f}".format(self.train_bow.sum(1).sum() / self.train_bow.shape[0]))
 
         if contextual_embed:
-            self.train_contextual_embed = load_contextual_embed(self.train_texts, device)
-            self.test_contextual_embed = load_contextual_embed(self.test_texts, device)
+            self.doc_embed_model = DocEmbedModel(doc_embed_model, device)
+            self.train_contextual_embed = self.doc_embed_model.encode(self.train_texts)
+            self.test_contextual_embed = self.doc_embed_model.encode(self.test_texts)
+
             self.contextual_embed_size = self.train_contextual_embed.shape[1]
 
         if as_tensor:

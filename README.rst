@@ -154,14 +154,13 @@ Install topmost with ``pip`` as
 
     $ pip install topmost
 
-
-Discover topics from your own datasets
 -------------------------------------------
 
-We can get the top words of discovered topics, ``topic_top_words`` and the topic distributions of documents, ``doc_topic_dist``.
+We try FASTopic_ to get the top words of discovered topics, ``topic_top_words`` and the topic distributions of documents, ``doc_topic_dist``.
 The preprocessing steps are configurable. See our documentations.
 
 .. code-block:: python
+
     import topmost
     from topmost.data import RawDataset
     from topmost.preprocessing import Preprocessing
@@ -229,7 +228,7 @@ Evaluate
     TD = topmost.evaluations.compute_topic_diversity(top_words)
 
     # get doc-topic distributions of testing samples
-    test_doc_topic_dist = trainer.test(dataset.test_data)
+    test_theta = trainer.test(dataset.test_data)
     # evaluate clustering
     clustering_results = topmost.evaluations.evaluate_clustering(test_theta, dataset.test_labels)
     # evaluate classification
@@ -251,8 +250,8 @@ Test new documents
     ]
 
     preprocessing = Preprocessing()
-    parsed_new_docs, new_bow = preprocessing.parse(new_docs, vocab=dataset.vocab)
-    new_doc_topic_dist = trainer.test(torch.as_tensor(new_bow, device=device).float())
+    new_parsed_docs, new_bow = preprocessing.parse(new_docs, vocab=dataset.vocab)
+    new_theta = trainer.test(torch.as_tensor(new_bow, device=device).float())
 
 
 
@@ -264,7 +263,7 @@ Installation
 Stable release
 --------------
 
-To install TopMost, run this command in your terminal:
+To install TopMost, run this command in the terminal:
 
 .. code-block:: console
 

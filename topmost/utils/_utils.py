@@ -18,17 +18,20 @@ def get_stopwords_set(stopwords=[]):
     from topmost.data import download_dataset
 
     if stopwords == 'English':
-        from gensim.parsing.preprocessing import STOPWORDS as stopword_set
+        from gensim.parsing.preprocessing import STOPWORDS as stopwords
 
     elif stopwords in ['mallet', 'snowball']:
         download_dataset('stopwords', cache_path='./')
-        stopwords = f'./stopwords/{stopwords}_stopwords.txt'
-        stopword_set = file_utils.read_text(stopwords)
+        path = f'./stopwords/{stopwords}_stopwords.txt'
+        stopwords = file_utils.read_text(path)
 
-    stopword_set = frozenset(stopword_set)
+    stopword_set = frozenset(stopwords)
 
     return stopword_set
 
 
 if __name__ == '__main__':
-    get_stopwords_set('English')
+    print(list(get_stopwords_set('English'))[:10])
+    print(list(get_stopwords_set('mallet'))[:10])
+    print(list(get_stopwords_set('snowball'))[:10])
+    print(list(get_stopwords_set())[:10])

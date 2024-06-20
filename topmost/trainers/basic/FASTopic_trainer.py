@@ -21,7 +21,7 @@ class FASTopicTrainer:
                 ):
         self.dataset = dataset
         self.num_top_words = num_top_words
-        preprocessing = Preprocessing()
+
         self.model = FASTopic(num_topics=num_topics,
                               preprocessing=preprocessing,
                               num_top_words=num_top_words,

@@ -12,6 +12,7 @@ import scipy.sparse
 from tqdm import tqdm
 from sklearn.feature_extraction.text import CountVectorizer
 
+from topmost.data import file_utils
 from topmost.utils._utils import get_stopwords_set
 from topmost.utils.logger import Logger
 
