@@ -4,10 +4,9 @@ Overview
 
 TopMost offers the following topic modeling scenarios with models, evaluation metrics, and datasets:
 
-.. image:: _static/architecture.svg
+.. image:: https://github.com/BobXWu/TopMost/raw/main/docs/source/_static/architecture.svg
     :width: 390
     :align: center
-
 
 +------------------------------+---------------+--------------------------------------------+-----------------+
 |            Scenario          |     Model     |               Evaluation Metric            |  Datasets       |
@@ -21,7 +20,7 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 |                              | | TSCTM_      |                                            | | Wikitext-103  |
 |                              | | BERTopic_   |                                            |                 |
 |                              | | ECRTM_      |                                            |                 |
-|                              | |             |                                            |                 |
+|                              | | FASTopic_   |                                            |                 |
 +------------------------------+---------------+--------------------------------------------+-----------------+
 |                              |               |                                            | | 20NG          |
 |                              | | HDP_        | | TC over levels                           | | IMDB          |
@@ -34,7 +33,7 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 |                              |               | | TC over time slices                      |                 |
 | | Dynamic                    | | DTM_        | | TD over time slices                      | | NeurIPS       |
 | | Topic Modeling             | | DETM_       | | Clustering                               | | ACL           |
-|                              |               | | Classification                           | | NYT           |
+|                              | | CFDTM_      | | Classification                           | | NYT           |
 +------------------------------+---------------+--------------------------------------------+-----------------+
 |                              |               | | TC (CNPMI)                               | | ECNews        |
 | | Cross-lingual              | | NMTM_       | | TD over languages                        | | Amazon        |
@@ -52,6 +51,7 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 .. _CTM: https://aclanthology.org/2021.eacl-main.143/
 .. _TSCTM: https://aclanthology.org/2022.emnlp-main.176/
 .. _ECRTM: https://arxiv.org/pdf/2306.04217.pdf
+.. _FASTopic: https://arxiv.org/pdf/2405.17978
 
 .. _HDP: https://people.eecs.berkeley.edu/~jordan/papers/hdp.pdf
 .. _SawETM: http://proceedings.mlr.press/v139/duan21b/duan21b.pdf
@@ -61,6 +61,8 @@ TopMost offers the following topic modeling scenarios with models, evaluation me
 
 .. _DTM: https://mimno.infosci.cornell.edu/info6150/readings/dynamic_topic_models.pdf
 .. _DETM: https://arxiv.org/abs/1907.05545
+.. _CFDTM: https://arxiv.org/pdf/2405.17957
 
 .. _NMTM: https://bobxwu.github.io/files/pub/NLPCC2020_Neural_Multilingual_Topic_Model.pdf
 .. _InfoCTM: https://arxiv.org/abs/2304.03544
+

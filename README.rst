@@ -41,7 +41,7 @@ TopMost provides complete lifecycles of topic modeling, including datasets, prep
 
 
 |
-| If you want to use our toolkit, please cite as
+| If you want to use TopMost, please cite as
 
 ::
 
@@ -76,7 +76,7 @@ Overview
 
 TopMost offers the following topic modeling scenarios with models, evaluation metrics, and datasets:
 
-.. image:: docs/source/_static/architecture.svg
+.. image:: https://github.com/BobXWu/TopMost/raw/main/docs/source/_static/architecture.svg
     :width: 390
     :align: center
 
@@ -184,6 +184,7 @@ The preprocessing steps are configurable. See our documentations.
     print(new_theta.argmax(1))
 
 
+
 ============
 Usage
 ============
@@ -275,17 +276,10 @@ From sources
 ------------
 
 The sources for TopMost can be downloaded from the Github repository.
-You can clone the public repository by
 
 .. code-block:: console
 
-    $ git clone https://github.com/BobXWu/TopMost.git
-
-Then install the TopMost by
-
-.. code-block:: console
-
-    $ python setup.py install
+    $ pip install git+https://github.com/bobxwu/TopMost.git
 
 
 
@@ -383,6 +377,6 @@ Contributors
 Acknowledgments
 =================
 
+- Icon by `Flat-icons-com <https://www.freepik.com/icon/top_671169>`_.
 - If you want to add any models to this package, we welcome your pull requests.
 - If you encounter any problem, please either directly contact `Xiaobao Wu <xiaobao002@e.ntu.edu.sg>`_ or leave an issue in the GitHub repo.
-- Icon by `Flat-icons-com <https://www.freepik.com/icon/top_671169>`_.

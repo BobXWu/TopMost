@@ -1,4 +1,5 @@
 
+
 ============
 Installation
 ============
@@ -7,7 +8,7 @@ Installation
 Stable release
 --------------
 
-To install TopMost, run this command in your terminal:
+To install TopMost, run this command in the terminal:
 
 .. code-block:: console
 
@@ -19,16 +20,7 @@ From sources
 ------------
 
 The sources for TopMost can be downloaded from the Github repository.
-You can clone the public repository by
 
 .. code-block:: console
 
-    $ git clone https://github.com/BobXWu/TopMost.git
-
-Then install the TopMost by
-
-.. code-block:: console
-
-    $ python setup.py install
-
-
+    $ pip install git+https://github.com/bobxwu/TopMost.git
