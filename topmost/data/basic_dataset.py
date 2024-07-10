@@ -10,23 +10,29 @@ from typing import List, Tuple, Union, Mapping, Any, Callable, Iterable
 
 
 class DocEmbedModel:
-    def __init__(self,
-                 model: str="all-MiniLM-L6-v2",
-                 device: str='cpu'
-                ):
+    def __init__(
+            self,
+            model: Union[str, callable]="all-MiniLM-L6-v2",
+            device: str='cpu',
+            verbose: bool=False
+        ):
+        self.verbose = verbose
 
-        if isinstance(model, str):
-            self.doc_embed_model = SentenceTransformer(model, device=device)
+        if isinstance(model, str): 
+            self.model = SentenceTransformer(model, device=device)
         else:
-            self.doc_embed_model = model
+            self.model = model
 
     def encode(self,
                docs:List[str],
-               convert_to_tensor: bool=False,
-               verbose:bool=False
+               convert_to_tensor: bool=False
             ):
 
-        embeddings = self.doc_embed_model.encode(docs, convert_to_tensor=convert_to_tensor, show_progress_bar=verbose)
+        embeddings = self.model.encode(
+                        docs,
+                        convert_to_tensor=convert_to_tensor,
+                        show_progress_bar=self.verbose
+                    )
         return embeddings
 
 
@@ -45,7 +51,7 @@ class RawDataset:
                 ):
 
         if preprocessing is None:
-            preprocessing = Preprocessing()
+            preprocessing = Preprocessing(verbose=verbose)
 
         rst = preprocessing.preprocess(docs, pretrained_WE=pretrained_WE)
         self.train_data = rst['train_bow']
@@ -57,8 +63,13 @@ class RawDataset:
         if contextual_embed:
             if embed_model_device is None:
                 embed_model_device = device
-            self.doc_embed_model = DocEmbedModel(doc_embed_model, embed_model_device)
-            self.train_contextual_embed = self.doc_embed_model.encode(docs, verbose=verbose)
+
+            if isinstance(doc_embed_model, str):
+                self.doc_embedder = DocEmbedModel(doc_embed_model, embed_model_device, verbose=verbose)
+            else:
+                self.doc_embedder = doc_embed_model
+
+            self.train_contextual_embed = self.doc_embedder.encode(docs)
             self.contextual_embed_size = self.train_contextual_embed.shape[1]
 
         if as_tensor:
@@ -93,9 +104,9 @@ class BasicDataset:
         print("average length: {:.3f}".format(self.train_bow.sum(1).sum() / self.train_bow.shape[0]))
 
         if contextual_embed:
-            self.doc_embed_model = DocEmbedModel(doc_embed_model, device)
-            self.train_contextual_embed = self.doc_embed_model.encode(self.train_texts)
-            self.test_contextual_embed = self.doc_embed_model.encode(self.test_texts)
+            self.doc_embedder = DocEmbedModel(doc_embed_model, device)
+            self.train_contextual_embed = self.doc_embedder.encode(self.train_texts)
+            self.test_contextual_embed = self.doc_embedder.encode(self.test_texts)
 
             self.contextual_embed_size = self.train_contextual_embed.shape[1]
 

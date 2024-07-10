@@ -36,9 +36,9 @@ class DynamicDataset:
         self.num_times = len(np.unique(self.train_times))
         self.train_time_wordfreq = self.get_time_wordfreq(self.train_bow, self.train_times)
 
-        print('all train size: ', len(self.train_bow))
-        print('all test size: ', len(self.test_bow))
-        print('all vocab size: ', len(self.vocab))
+        print('train size: ', len(self.train_bow))
+        print('test size: ', len(self.test_bow))
+        print('vocab size: ', len(self.vocab))
         print('average length: {:.3f}'.format(self.train_bow.sum(1).mean().item()))
         print('num of each time slice: ', self.num_times, np.bincount(self.train_times))
 
