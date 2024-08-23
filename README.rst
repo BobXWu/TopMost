@@ -45,11 +45,17 @@ TopMost provides complete lifecycles of topic modeling, including datasets, prep
 
 ::
 
-    @article{wu2023topmost,
-        title={Towards the TopMost: A Topic Modeling System Toolkit},
-        author={Wu, Xiaobao and Pan, Fengjun and Luu, Anh Tuan},
-        journal={arXiv preprint arXiv:2309.06908},
-        year={2023}
+    @inproceedings{wu2023topmost,
+        title = "Towards the {T}op{M}ost: A Topic Modeling System Toolkit",
+        author = "Wu, Xiaobao  and Pan, Fengjun  and Luu, Anh Tuan",
+        editor = "Cao, Yixin  and Feng, Yang  and Xiong, Deyi",
+        booktitle = "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations)",
+        month = aug,
+        year = "2024",
+        address = "Bangkok, Thailand",
+        publisher = "Association for Computational Linguistics",
+        url = "https://aclanthology.org/2024.acl-demos.4",
+        pages = "31--41"
     }
 
     @article{wu2023survey,
