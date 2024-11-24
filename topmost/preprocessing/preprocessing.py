@@ -238,7 +238,7 @@ class Preprocessing:
 
     def convert_labels(self, train_labels, test_labels):
         if train_labels is not None:
-            label_list = list(set(train_labels))
+            label_list = list(set(train_labels).union(set(test_labels)))
             label_list.sort()
             n_labels = len(label_list)
             label2id = dict(zip(label_list, range(n_labels)))
