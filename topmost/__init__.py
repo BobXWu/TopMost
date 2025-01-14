@@ -12,7 +12,7 @@ from .data.basic_dataset import RawDataset
 from .data.crosslingual_dataset import CrosslingualDataset
 from .data.dynamic_dataset import DynamicDataset
 from .data.download import download_dataset
-
+from .data import file_utils
 
 # trainers
 from .trainers.basic.basic_trainer import BasicTrainer

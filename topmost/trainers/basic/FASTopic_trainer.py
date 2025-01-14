@@ -1,6 +1,6 @@
-from fastopic import FASTopic
 from topmost.utils.logger import Logger
-
+from topmost.preprocess import Preprocess
+from fastopic import FASTopic
 
 logger = Logger("WARNING")
 
@@ -20,6 +20,7 @@ class FASTopicTrainer:
         self.dataset = dataset
         self.num_top_words = num_top_words
 
+        preprocess = Preprocess(stopwords=[]) if preprocess is None else preprocess
         self.model = FASTopic(num_topics=num_topics,
                               preprocess=preprocess,
                               num_top_words=num_top_words,

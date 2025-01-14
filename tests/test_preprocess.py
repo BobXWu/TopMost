@@ -4,8 +4,7 @@ import numpy as np
 import sys
 sys.path.append('../')
 
-from topmost.data import download_20ng, file_utils
-from topmost.preprocess import Preprocess
+from topmost import download_20ng, file_utils, Preprocess
 
 
 @pytest.fixture

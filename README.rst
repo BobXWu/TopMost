@@ -171,7 +171,7 @@ The preprocessing steps are configurable. See our documentations.
     from sklearn.datasets import fetch_20newsgroups
 
     docs = fetch_20newsgroups(subset='all',  remove=('headers', 'footers', 'quotes'))['data']
-    preprocess = Preprocess(vocab_size=10000, stopwords='English')
+    preprocess = Preprocess(vocab_size=10000)
 
     dataset = RawDataset(docs, preprocess, device="cuda")
 

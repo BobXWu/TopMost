@@ -132,7 +132,7 @@ class Preprocess:
                  tokenizer=None,
                  test_sample_size=None,
                  test_p=0.2,
-                 stopwords=[],
+                 stopwords="English",
                  min_doc_count=0,
                  max_doc_freq=1.0,
                  keep_num=False,

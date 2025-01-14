@@ -7,7 +7,7 @@ with open('requirements.txt', 'r') as f:
 with open('README.rst') as f:
     readme = f.read()
 
-VERSION = '0.0.6'
+VERSION = '1.0.0'
 DESCRIPTION = 'Topmost: A Topic Modeling System Tookit'
 LONG_DESCRIPTION = """
     [TopMost](https://github.com/bobxwu/topmost) provides complete lifecycles of topic modeling, including datasets, models, training, and evaluations.

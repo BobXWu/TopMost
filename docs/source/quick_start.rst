@@ -24,7 +24,7 @@ The preprocessing steps are configurable. See our documentations.
     from sklearn.datasets import fetch_20newsgroups
 
     docs = fetch_20newsgroups(subset='all',  remove=('headers', 'footers', 'quotes'))['data']
-    preprocessing = Preprocessing(vocab_size=10000, stopwords='English')
+    preprocessing = Preprocessing(vocab_size=10000)
 
     device = 'cuda' # or 'cpu'
     dataset = RawDataset(docs, preprocessing, device=device)
