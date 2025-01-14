@@ -1,6 +1,4 @@
 from fastopic import FASTopic
-from topmost.preprocessing import Preprocessing
-
 from topmost.utils.logger import Logger
 
 
@@ -12,7 +10,7 @@ class FASTopicTrainer:
                  dataset,
                  num_topics=50,
                  num_top_words=15,
-                 preprocessing=None,
+                 preprocess=None,
                  epochs=200,
                  DT_alpha=3.0,
                  TW_alpha=2.0,
@@ -23,14 +21,15 @@ class FASTopicTrainer:
         self.num_top_words = num_top_words
 
         self.model = FASTopic(num_topics=num_topics,
-                              preprocessing=preprocessing,
+                              preprocess=preprocess,
                               num_top_words=num_top_words,
-                              epochs=epochs,
                               DT_alpha=DT_alpha,
                               TW_alpha=TW_alpha,
                               theta_temp=theta_temp,
                               verbose=verbose
                             )
+
+        self.epochs = epochs
 
         if verbose:
             logger.set_level("DEBUG")
@@ -38,7 +37,7 @@ class FASTopicTrainer:
             logger.set_level("WARNING")
 
     def train(self):
-        return self.model.fit_transform(self.dataset.train_texts)
+        return self.model.fit_transform(self.dataset.train_texts, epochs=self.epochs)
 
     def test(self, texts):
         theta = self.model.transform(texts)

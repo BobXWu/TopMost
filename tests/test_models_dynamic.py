@@ -4,9 +4,8 @@ import sys
 sys.path.append('../')
 
 import topmost
-from topmost.data import download_dataset
-from topmost.data import DynamicDataset
-from topmost.trainers import DynamicTrainer
+from topmost import download_dataset
+from topmost import DynamicDataset, DynamicTrainer
 
 
 @pytest.fixture
@@ -42,8 +41,8 @@ def test_models(cache_path, num_topics):
     dataset = DynamicDataset(f"{cache_path}/NYT", as_tensor=True)
 
     model_info = [
-        topmost.models.DETM,
-        topmost.models.CFDTM,
+        topmost.DETM,
+        topmost.CFDTM,
     ]
 
     for model_module in model_info:

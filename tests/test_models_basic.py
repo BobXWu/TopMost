@@ -56,12 +56,12 @@ def test_models(cache_path, num_topics):
     dataset = BasicDataset(f"{cache_path}/20NG")
 
     model_info = [
-        topmost.models.ProdLDA,
-        topmost.models.ETM,
-        topmost.models.DecTM,
-        topmost.models.NSTM,
-        topmost.models.TSCTM,
-        topmost.models.ECRTM,
+        topmost.ProdLDA,
+        topmost.ETM,
+        topmost.DecTM,
+        topmost.NSTM,
+        topmost.TSCTM,
+        topmost.ECRTM,
         'BERTopic',
         'FASTopic',
         'LDAGensim',

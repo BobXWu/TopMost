@@ -4,8 +4,7 @@ import numpy as np
 import sys
 sys.path.append('../')
 
-from topmost.data import download_dataset
-from topmost.data import BasicDataset
+from topmost import download_dataset, BasicDataset
 
 
 @pytest.fixture

@@ -7,7 +7,6 @@ from torch.optim.lr_scheduler import StepLR
 from topmost.utils import _utils
 from topmost.utils.logger import Logger
 
-
 logger = Logger("WARNING")
 
 
@@ -97,15 +96,15 @@ class BasicTrainer:
 
         return top_words, train_theta
 
-    def test(self, input_data):
-        data_size = input_data.shape[0]
+    def test(self, bow):
+        data_size = bow.shape[0]
         theta = list()
         all_idx = torch.split(torch.arange(data_size), self.batch_size)
 
         with torch.no_grad():
             self.model.eval()
             for idx in all_idx:
-                batch_input = input_data[idx]
+                batch_input = bow[idx]
                 batch_theta = self.model.get_theta(batch_input)
                 theta.extend(batch_theta.cpu().tolist())
 

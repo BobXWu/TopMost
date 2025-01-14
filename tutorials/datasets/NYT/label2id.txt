@@ -1,0 +1,1 @@
+{'arts': 0, 'business': 1, 'climate': 2, 'health': 3, 'nyregion': 4, 'opinion': 5, 'sci-tech': 6, 'sports': 7, 'style-fashion': 8, 'upshot': 9, 'us': 10, 'world': 11}

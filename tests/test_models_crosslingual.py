@@ -4,9 +4,8 @@ import sys
 sys.path.append('../')
 
 import topmost
-from topmost.data import download_dataset
-from topmost.data import CrosslingualDataset
-from topmost.trainers import CrosslingualTrainer
+from topmost import download_dataset
+from topmost import CrosslingualDataset, CrosslingualTrainer
 
 
 @pytest.fixture
@@ -41,7 +40,7 @@ def test_models(cache_path, num_topics):
 
     dataset = CrosslingualDataset(f"{cache_path}/Amazon_Review", lang1='en', lang2='cn', dict_path=f'{cache_path}/dict/ch_en_dict.dat', as_tensor=True)
 
-    model = topmost.models.NMTM(
+    model = topmost.NMTM(
         num_topics=num_topics,
         Map_en2cn=dataset.Map_en2cn,
         Map_cn2en=dataset.Map_cn2en,
@@ -51,7 +50,7 @@ def test_models(cache_path, num_topics):
 
     crosslingual_model_test(model, dataset, num_topics)
 
-    model = topmost.models.InfoCTM(
+    model = topmost.InfoCTM(
         num_topics=num_topics,
         trans_e2c=dataset.trans_matrix_en,
         pretrain_word_embeddings_en=dataset.pretrained_WE_en,

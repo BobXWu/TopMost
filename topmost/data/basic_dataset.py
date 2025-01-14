@@ -1,10 +1,11 @@
 import torch
 from torch.utils.data import DataLoader
 import numpy as np
-import scipy.sparse
 import scipy.io
+import scipy.sparse
+from scipy.sparse import issparse
 from sentence_transformers import SentenceTransformer
-from topmost.preprocessing import Preprocessing
+from topmost.preprocess import Preprocess
 from . import file_utils
 from typing import List, Tuple, Union, Mapping, Any, Callable, Iterable
 
@@ -39,24 +40,26 @@ class DocEmbedModel:
 class RawDataset:
     def __init__(self,
                  docs,
-                 preprocessing=None,
+                 preprocess=None,
                  batch_size=200,
                  device='cpu',
                  as_tensor=True,
                  contextual_embed=False,
-                 pretrained_WE=True,
+                 pretrained_WE=False,
                  doc_embed_model="all-MiniLM-L6-v2",
                  embed_model_device=None,
                  verbose=False
                 ):
 
-        if preprocessing is None:
-            preprocessing = Preprocessing(verbose=verbose)
+        if preprocess is None:
+            preprocess = Preprocess(verbose=verbose)
 
-        rst = preprocessing.preprocess(docs, pretrained_WE=pretrained_WE)
-        self.train_data = rst['train_bow']
-        self.train_texts = rst['train_texts']
-        self.vocab = rst['vocab']
+        rst = preprocess.preprocess(docs, pretrained_WE=pretrained_WE)
+        self.train_data = rst["train_bow"]
+        self.train_texts = rst["train_texts"]
+        self.vocab = rst["vocab"]
+        if issparse(self.train_data):
+            self.train_data = self.train_data.toarray()
 
         self.vocab_size = len(self.vocab)
 

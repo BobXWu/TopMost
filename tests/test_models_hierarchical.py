@@ -4,9 +4,8 @@ import sys
 sys.path.append('../')
 
 import topmost
-from topmost.data import download_dataset
-from topmost.data import BasicDataset
-from topmost.trainers import HierarchicalTrainer
+from topmost import download_dataset
+from topmost import BasicDataset, HierarchicalTrainer
 
 
 @pytest.fixture
@@ -46,9 +45,9 @@ def test_models(cache_path, num_topics_list):
     dataset = BasicDataset(f"{cache_path}/20NG", as_tensor=True)
 
     model_info = [
-        topmost.models.SawETM,
-        topmost.models.HyperMiner,
-        topmost.models.TraCo,
+        topmost.SawETM,
+        topmost.HyperMiner,
+        topmost.TraCo,
     ]
 
     for model_module in model_info:
