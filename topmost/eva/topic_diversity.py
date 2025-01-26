@@ -1,22 +1,23 @@
 import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
 from collections import Counter
 from tqdm import tqdm
 
+from typing import List
 
-def _diversity(top_words):
-    K = len(top_words)
-    T = len(top_words[0].split())
-    vectorizer = CountVectorizer(tokenizer=lambda x: x.split())
-    counter = vectorizer.fit_transform(top_words).toarray()
 
-    TF = counter.sum(axis=0)
-    TD = (TF == 1).sum() / (K * T)
+def _diversity(top_words: List[str]):
+    num_words = 0.
+    word_set = set()
+    for words in top_words:
+        ws = words.split()
+        num_words += len(ws)
+        word_set.update(ws)
 
+    TD = len(word_set) / num_words
     return TD
 
 
-def multiaspect_diversity(top_words, _type="TD"):
+def multiaspect_diversity(top_words: List[str], _type="TD"):
     TD_list = list()
     for level_top_words in top_words:
         TD = _diversity(level_top_words, _type)
@@ -39,7 +40,13 @@ def _time_slice_diversity(topics, time_vocab):
     return num_associated_words / (len(topics) * T)
 
 
-def dynamic_diversity(top_words, train_bow, train_times, vocab, verbose=False):
+def dynamic_diversity(
+        top_words: List[str],
+        train_bow: np.ndarray,
+        train_times: List[int],
+        vocab: List[str],
+        verbose=False
+    ):
     TD_list = list()
 
     time_idx = np.sort(np.unique(train_times))
