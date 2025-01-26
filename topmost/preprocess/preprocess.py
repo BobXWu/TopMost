@@ -32,12 +32,12 @@ alphanum = re.compile('^[a-zA-Z0-9_]+$')
 
 class Tokenizer:
     def __init__(self,
-                 stopwords,
-                 keep_num,
-                 keep_alphanum,
-                 strip_html,
-                 no_lower,
-                 min_length
+                 stopwords="English",
+                 keep_num=False,
+                 keep_alphanum=False,
+                 strip_html=False,
+                 no_lower=False,
+                 min_length=3,
                 ):
         self.keep_num = keep_num
         self.keep_alphanum = keep_alphanum
