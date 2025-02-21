@@ -36,8 +36,8 @@
 TopMost provides complete lifecycles of topic modeling, including datasets, preprocessing, models, training, and evaluations. It covers the most popular topic modeling scenarios, like basic, dynamic, hierarchical, and cross-lingual topic modeling.
 
 
-| Check our **ACL 2024 demo paper**: `Towards the TopMost: A Topic Modeling System Toolkit <https://arxiv.org/pdf/2309.06908.pdf>`_.
-| Check our survey paper on neural topic models accepted to **Artificial Intelligence Review**: `A Survey on Neural Topic Models: Methods, Applications, and Challenges <https://arxiv.org/pdf/2401.15351.pdf>`_.
+| **ACL 2024 Demo paper**: `Towards the TopMost: A Topic Modeling System Toolkit <https://arxiv.org/pdf/2309.06908.pdf>`_.
+| Survey paper on neural topic models **(Artificial Intelligence Review)**: `A Survey on Neural Topic Models: Methods, Applications, and Challenges <https://arxiv.org/pdf/2401.15351.pdf>`_.
 
 
 |
@@ -45,7 +45,7 @@ TopMost provides complete lifecycles of topic modeling, including datasets, prep
 
 ::
 
-    @inproceedings{wu2023topmost,
+    @inproceedings{wu2024topmost,
         title = "Towards the {T}op{M}ost: A Topic Modeling System Toolkit",
         author = "Wu, Xiaobao  and Pan, Fengjun  and Luu, Anh Tuan",
         editor = "Cao, Yixin  and Feng, Yang  and Xiong, Deyi",
@@ -58,7 +58,7 @@ TopMost provides complete lifecycles of topic modeling, including datasets, prep
         pages = "31--41"
     }
 
-    @article{wu2023survey,
+    @article{wu2024survey,
         title={A Survey on Neural Topic Models: Methods, Applications, and Challenges},
         author={Wu, Xiaobao and Nguyen, Thong and Luu, Anh Tuan},
         journal={Artificial Intelligence Review},
@@ -384,3 +384,11 @@ Contact
 
 - We welcome your contributions to this project. Please feel free to submit pull requests.
 - If you encounter any problem, please either directly contact `Xiaobao Wu <xiaobao002@e.ntu.edu.sg>`_ or leave an issue in the GitHub repo.
+
+
+=================
+Related Resources
+=================
+
+- `FASTopic <https://github.com/BobXWu/Fastopic>`_: A lightweight, super fast, and effective topic model.
+- `A Survey on Neural Topic Models: Methods, Applications, and Challenges <https://github.com/BobXWu/Paper-Neural-Topic-Models>`_
