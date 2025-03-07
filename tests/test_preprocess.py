@@ -1,9 +1,5 @@
 import pytest
 import numpy as np
-
-import sys
-sys.path.append('../')
-
 from topmost import download_20ng, file_utils, Preprocess
 
 

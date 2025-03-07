@@ -1,8 +1,6 @@
-from bertopic import BERTopic
-
-
 class BERTopicTrainer:
     def __init__(self, dataset, num_topics=50, num_top_words=15):
+        from bertopic import BERTopic
         self.model = BERTopic(nr_topics=num_topics, top_n_words=num_top_words)
         self.dataset = dataset
 

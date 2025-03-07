@@ -162,7 +162,7 @@ Install topmost with ``pip`` as
 
 -------------------------------------------
 
-We try FASTopic_ to get the top words of discovered topics, ``topic_top_words`` and the topic distributions of documents, ``doc_topic_dist``.
+We try FASTopic to get the top words of discovered topics, ``topic_top_words`` and the topic distributions of documents, ``doc_topic_dist``.
 The preprocessing steps are configurable. See our documentations.
 
 .. code-block:: python
@@ -390,5 +390,7 @@ Contact
 Related Resources
 =================
 
-- `FASTopic <https://github.com/BobXWu/Fastopic>`_: A lightweight, super fast, and effective topic model.
-- `A Survey on Neural Topic Models: Methods, Applications, and Challenges <https://github.com/BobXWu/Paper-Neural-Topic-Models>`_
+- `FASTopic package <https://github.com/BobXWu/Fastopic>`_: A lightweight, super fast, and effective topic model.
+- `A Survey on Neural Topic Models: Methods, Applications, and Challenges`_.
+
+.. _"A Survey on Neural Topic Models: Methods, Applications, and Challenges": https://github.com/BobXWu/Paper-Neural-Topic-Models

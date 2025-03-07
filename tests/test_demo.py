@@ -1,8 +1,4 @@
 import pytest
-import sys
-
-sys.path.append("../")
-
 import torch
 import topmost
 from topmost import eva, Preprocess

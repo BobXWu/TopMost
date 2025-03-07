@@ -1,8 +1,4 @@
 import pytest
-
-import sys
-sys.path.append('../')
-
 from topmost import download_dataset, BasicDataset, DynamicDataset
 from topmost import BasicTrainer, DynamicTrainer
 from topmost import ETM, DETM

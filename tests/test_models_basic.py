@@ -1,12 +1,8 @@
 import pytest
-
-import sys
-sys.path.append('../')
-
 import topmost
-from topmost.data import download_dataset
-from topmost.data import BasicDataset
-from topmost.trainers import BasicTrainer, BERTopicTrainer, FASTopicTrainer, LDAGensimTrainer, NMFGensimTrainer
+from topmost import download_dataset
+from topmost import BasicDataset
+from topmost import BasicTrainer, BERTopicTrainer, FASTopicTrainer, LDAGensimTrainer, NMFGensimTrainer
 
 
 @pytest.fixture

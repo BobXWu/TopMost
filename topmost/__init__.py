@@ -4,6 +4,7 @@ from . import eva
 from . import trainers
 from . import preprocess
 
+from .data import download_20ng
 from .preprocess.preprocess import Preprocess
 
 # data

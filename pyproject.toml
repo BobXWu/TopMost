@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "topmost"
+version = "1.0.2"
+description = "Topmost: A Topic Modeling System Toolkit"
+readme = "README.rst"
+requires-python = ">=3.9"
+license = {text = "Apache 2.0 License"}
+authors = [
+    {name = "Xiaobao Wu", email = "xiaobao002@e.ntu.edu.sg"}
+]
+
+
+keywords = [
+    "toolkit",
+    "topic model",
+    "neural topic model",
+    "bert",
+    "semantics",
+    "text"
+]
+
+dependencies = [
+    "pandas>=2.2.0",
+    "plotly>=6.0.0",
+    "sentence-transformers>=3.4.0",
+    "torchvision>=0.21.0",
+    "gensim>=4.3.3",
+    "scikit-learn>=1.6.1",
+    "tqdm>=4.66.0",
+    "fastopic>=1.0.0"
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "bertopic>=0.16.0"
+]
+test = [
+    "pytest>=8.3.0"
+]
+
+
+[tool.setuptools]
+packages = ["topmost"]
+
+[project.urls]
+Documentation = "https://topmost.readthedocs.io/en/latest/?badge=latest"
+Homepage = "https://github.com/bobxwu/topmost"
+Repository = "https://github.com/bobxwu/TopMost.git"
+Issues = "https://github.com/bobxwu/TopMost/issues"

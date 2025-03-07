@@ -1,8 +1,4 @@
 import pytest
-
-import sys
-sys.path.append('../')
-
 import topmost
 from topmost import download_dataset
 from topmost import DynamicDataset, DynamicTrainer
