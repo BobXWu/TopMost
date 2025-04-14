@@ -140,7 +140,9 @@ The preprocessing steps are configurable. See our documentations.
 
 .. code-block:: python
 
-    from topmost import RawDataset, Preprocess, FASTopicTrainer
+    from topmost.data import RawDataset
+    from topmost.preprocess import Preprocess
+    from topmost.trainers import FASTopicTrainer
     from sklearn.datasets import fetch_20newsgroups
 
     docs = fetch_20newsgroups(subset='all',  remove=('headers', 'footers', 'quotes'))['data']
