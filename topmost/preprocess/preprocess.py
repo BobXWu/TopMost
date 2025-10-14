@@ -208,7 +208,12 @@ class Preprocess:
         sparse_bow = vectorizer.fit_transform(parsed_texts)
         return parsed_texts, sparse_bow
 
-    def preprocess_jsonlist(self, dataset_dir, label_name=None):
+    def preprocess_jsonlist(
+            self,
+            dataset_dir,
+            label_name=None,
+            pretrained_WE=False
+        ):
         train_items = file_utils.read_jsonlist(os.path.join(dataset_dir, 'train.jsonlist'))
         test_items = file_utils.read_jsonlist(os.path.join(dataset_dir, 'test.jsonlist'))
 
@@ -231,7 +236,7 @@ class Preprocess:
             if label_name is not None:
                 test_labels.append(item[label_name])
 
-        rst = self.preprocess(raw_train_texts, train_labels, raw_test_texts, test_labels)
+        rst = self.preprocess(raw_train_texts, train_labels, raw_test_texts, test_labels, pretrained_WE)
 
         return rst
 
